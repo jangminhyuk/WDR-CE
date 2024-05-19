@@ -21,7 +21,7 @@ and Distributionally Robust Control and Estimation(WDRCE)
 
 ## Code explanation
 
-To get Figure 1 (a)
+### To get Figure 1 (a)
 First, generate the Total Cost data using
 ```
 python main_param_nonzeromean.py --dist quadratic --noise_dist quadratic
@@ -31,7 +31,7 @@ After data generation, plot the results using
 python plot_params4_drlqc_nonzeromean.py --dist quadratic --noise_dist quadratic
 ```
 ---
-To get Figure 1 (b)
+### Figure 1 (b)
 First, generate the Computation_time data using
 ```
 python main_time.py
@@ -42,7 +42,7 @@ After Data ge1neration, plot the results using
 python plot_time.py
 ```
 ---
-To get Figure 2 (a)
+### Figure 2 (a)
 First, generate the Total Cost data using
 ```
 python main_param_zeromean.py
@@ -52,7 +52,7 @@ After data generation, plot the results using
 python plot_params4_drlqc_zeromean.py
 ```
 ---
-To get Figure 2 (b)
+### Figure 2 (b)
 First, generate the Total Cost data using
 ```
 python main_param_zeromean.py --dist quadratic --noise_dist quadratic
@@ -62,7 +62,7 @@ After data generation, plot the results using
 python plot_params4_drlqc_zeromean.py --dist quadratic --noise_dist quadratic
 ```
 ---
-To get Figure 3 (a)
+### Figure 3 (a)
 First, generate the Total Cost data using
 ```
 python main_param_filter.py
@@ -72,7 +72,7 @@ After data generation, plot the results using
 python plot_params4_F.py
 ```
 ---
-To get Figure 3 (b)
+### Figure 3 (b)
 First, generate the Total Cost data using
 ```
 python main_param_filter.py --dist quadratic --noise_dist quadratic
@@ -82,7 +82,7 @@ After data generation, plot the results using
 python plot_params4_F.py --dist quadratic --noise_dist quadratic
 ```
 ---
-To get Figure 4 (a)
+### Figure 4 (a)
 First, generate the Total Cost data using
 ```
 python main_param_longT.py
@@ -92,7 +92,7 @@ After data generation, plot the results using
 python plot_params_long.py
 ```
 ---
-To get Figure 4 (b)
+### Figure 4 (b)
 First, generate the Total Cost data using
 ```
 python main_param_longT.py --dist quadratic --noise_dist quadratic
@@ -102,7 +102,7 @@ After data generation, plot the results using
 python plot_params_long.py --dist quadratic --noise_dist quadratic
 ```
 ---
-To get Figure 5 (a)
+### Figure 5 (a)
 First, generate the Total Cost data using
 ```
 python main_3.py
@@ -112,7 +112,7 @@ After data generation, plot the results using
 python plot_J.py
 ```
 ---
-To get Figure 5 (b)
+### Figure 5 (b)
 First, generate the Total Cost data using
 ```
 python main_3.py --dist quadratic --noise_dist quadratic
@@ -122,7 +122,7 @@ After data generation, plot the results using
 python plot_J.py --dist quadratic --noise_dist quadratic
 ```
 ---
-To get Figure 6 (a)
+### Figure 6 (a)
 First, generate the Total Cost data using
 ```
 python main_param_3_s21.py
@@ -132,7 +132,7 @@ After data generation, plot the results using
 python plot_params_21.py
 ```
 ---
-To get Figure 6 (b)
+### Figure 6 (b)
 First, generate the Total Cost data using
 ```
 python main_param_3_s21.py --dist quadratic --noise_dist quadratic
