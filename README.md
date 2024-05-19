@@ -30,7 +30,7 @@ After data generation, plot the results using
 ```
 python plot_params4_drlqc_nonzeromean.py --dist quadratic --noise_dist quadratic
 ```
-
+---
 To get Figure 1 (b)
 First, generate the Computation_time data using
 ```
@@ -41,7 +41,7 @@ After Data ge1neration, plot the results using
 ```
 python plot_time.py
 ```
-
+---
 To get Figure 2 (a)
 First, generate the Total Cost data using
 ```
@@ -51,7 +51,7 @@ After data generation, plot the results using
 ```
 python plot_params4_drlqc_zeromean.py
 ```
-
+---
 To get Figure 2 (b)
 First, generate the Total Cost data using
 ```
@@ -61,7 +61,7 @@ After data generation, plot the results using
 ```
 python plot_params4_drlqc_zeromean.py --dist quadratic --noise_dist quadratic
 ```
-
+---
 To get Figure 3 (a)
 First, generate the Total Cost data using
 ```
@@ -71,7 +71,7 @@ After data generation, plot the results using
 ```
 python plot_params4_F.py
 ```
-
+---
 To get Figure 3 (b)
 First, generate the Total Cost data using
 ```
@@ -81,7 +81,7 @@ After data generation, plot the results using
 ```
 python plot_params4_F.py --dist quadratic --noise_dist quadratic
 ```
-
+---
 To get Figure 4 (a)
 First, generate the Total Cost data using
 ```
@@ -91,7 +91,7 @@ After data generation, plot the results using
 ```
 python plot_params_long.py
 ```
-
+---
 To get Figure 4 (b)
 First, generate the Total Cost data using
 ```
@@ -101,7 +101,7 @@ After data generation, plot the results using
 ```
 python plot_params_long.py --dist quadratic --noise_dist quadratic
 ```
-
+---
 To get Figure 5 (a)
 First, generate the Total Cost data using
 ```
@@ -111,7 +111,7 @@ After data generation, plot the results using
 ```
 python plot_J.py
 ```
-
+---
 To get Figure 5 (b)
 First, generate the Total Cost data using
 ```
@@ -121,7 +121,7 @@ After data generation, plot the results using
 ```
 python plot_J.py --dist quadratic --noise_dist quadratic
 ```
-
+---
 To get Figure 6 (a)
 First, generate the Total Cost data using
 ```
@@ -131,7 +131,7 @@ After data generation, plot the results using
 ```
 python plot_params_21.py
 ```
-
+---
 To get Figure 6 (b)
 First, generate the Total Cost data using
 ```
