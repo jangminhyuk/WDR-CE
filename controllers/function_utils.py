@@ -3,7 +3,7 @@ import torch
 from scipy.linalg import sqrtm
 import pymanopt
 
-# Downloaded from DRLQC !!!!! https://github.com/RAO-EPFL/DR-Control
+# Downloaded from DRLQC author's github!!!!! 
 class Parameters:
     def __init__(
         self, A, B, C, Q, R, T, P, X0_hat, W_hat, V_hat, rho_w, rho_v, rho_x0, tol, tensors=True
