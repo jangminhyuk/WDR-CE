@@ -11,7 +11,6 @@ from controllers.inf_WDRC import inf_WDRC
 from controllers.inf_DRCE import inf_DRCE
 from joblib import Parallel, delayed
 
-
 import os
 import pickle
 
@@ -102,89 +101,54 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T,infinite,
     #noisedist = ["normal", "uniform", "quadratic"]
     num_noise_list = [num_noise_samples]
     theta_w = 1.0 # will not be used for this file!!!
-    num_x0_samples = 10 #  x0 samples 
+    num_x0_samples = 15 #  x0 samples 
     # for the noise_plot_results!!
     output_J_LQG_mean, output_J_WDRC_mean, output_J_DRCE_mean=[], [], []
     output_J_LQG_std, output_J_WDRC_std, output_J_DRCE_std=[], [], []
     #-------Initialization-------
-    nx = 21
-    nu = 11
-    ny = 10
-    A = np.array([[-1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [1,	0,	-1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	-1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	1,	0,	-1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	-1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,  0,	0,	0],
-                    [0,	0,	0,	0,	1,	0,	-1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	-1,	0,	0,  0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	1,	0,	-1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	-1,	0,  0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	1,	0,	-1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	-1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	1,	0,	-1,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	-1,	0,	0,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	1,	0,	-1,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	-1,	0,	0,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	1,	0,	-1,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	-1,	0,	0,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	1,	0,	-1,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	-1,	0,	0],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	1,	0,	-1],
-                    [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	-1]
-                    ])
-    B = np.array([[1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	1,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	1,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	1,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	1,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	1,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	1,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	1,	0,  0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	1,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	1,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0],
-                [0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	1]])
-    C = np.zeros((10,21))
-    C[0][1]=C[1][3]=C[2][5]=C[3][7]=C[4][9]=C[5][11]=C[6][13]=C[7][15]=C[8][17]=C[9][19]= 1
-    Q = Qf = np.eye(21)
-    R = np.eye(11) 
+    nx = 10 #state dimension
+    nu = 10 #control input dimension
+    ny = 10#output dimension
+    temp = np.ones((nx, nx))
+    A = np.eye(nx) + np.triu(temp, 1) - np.triu(temp, 2)
+    B = C = Q = R = Qf = np.eye(10) 
     #----------------------------
     if infinite: 
         T = 100 # Test for longer horizon if infinite (Can be erased!)
     # You can change theta_v list and lambda_list ! but you also need to change lists at plot_params.py to get proper plot
     #theta_v_list = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0] # radius of noise ambiguity set
-    theta_v_list = [0.1, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
-    theta_w_list = [0.1, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
+    theta_v_list = [0.1, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] #[1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
+    theta_w_list = [0.5] # radius of noise ambiguity set need to run 2.0 - 3, 4, 5, 6
     
-    if dist=='normal':
-        lambda_list = [15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
-    else:
-        lambda_list = [15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
     #theta_v_list = [5.0]
-    #lambda_list = [12]
-    theta_x0 = 0.5 # radius of initial state ambiguity set
+    #lambda_list = [6]
+    if dist=='normal':
+        theta_x0 = 1.0 # radius of initial state ambiguity set
+        lambda_list = [7, 10, 15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
+    else:
+        theta_x0 = 0.5
+        lambda_list = [7, 10, 15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
+    #lambda_list = [7]
     use_lambda = False # If use_lambda is True, we will use lambda_list. If use_lambda is False, we will use theta_w_list
     if use_lambda:
         dist_parameter_list = lambda_list
     else:
         dist_parameter_list = theta_w_list
-        
-    # Save lambda list
+    
+    # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
+    WDRC_lambda_file = open('./inputs/nonzero_qq/nonzero_wdrc_lambda.pkl', 'rb')
+    WDRC_lambda = pickle.load(WDRC_lambda_file)
+    WDRC_lambda_file.close()
+    DRCE_lambda_file = open('./inputs/nonzero_qq/nonzero_drce_lambda.pkl', 'rb')
+    DRCE_lambda = pickle.load(DRCE_lambda_file)
+    DRCE_lambda_file.close()
+    
+    # Uncomment Below 2 lines to save optimal lambda, using your own distributions.
     WDRC_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
     DRCE_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
     
     def perform_simulation(lambda_, noise_dist, dist_parameter, theta, idx_w, idx_v):
         for num_noise in num_noise_list:
-            
             np.random.seed(seed) # fix Random seed!
             print("--------------------------------------------")
             print("number of noise sample : ", num_noise)
@@ -210,22 +174,22 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T,infinite,
             if not os.path.exists(path):
                 os.makedirs(path)
         
-            #-------Disturbance Distribution-------
+            #-------Disturbance distribution-------
             if dist == "normal":
                 #disturbance distribution parameters
                 w_max = None
                 w_min = None
-                mu_w = 1.0*np.ones((nx, 1))
+                mu_w = 0.1*np.ones((nx, 1))
                 Sigma_w= 0.1*np.eye(nx)
                 #initial state distribution parameters
                 x0_max = None
                 x0_min = None
                 x0_mean = 0.1*np.ones((nx,1))
-                x0_cov = 0.1*np.eye(nx)
+                x0_cov = 0.1*np.eye(nx) 
             elif dist == "quadratic":
                 #disturbance distribution parameters
-                w_max = 0.8*np.ones(nx)
-                w_min = -0.4*np.ones(nx)
+                w_max = 0.2*np.ones(nx)
+                w_min = -0.5*np.ones(nx)
                 mu_w = (0.5*(w_max + w_min))[..., np.newaxis]
                 Sigma_w = 3.0/20.0*np.diag((w_max - w_min)**2)
                 #initial state distribution parameters
@@ -249,11 +213,11 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T,infinite,
             if noise_dist =="normal":
                 v_max = None
                 v_min = None
-                M = 1.0*np.eye(ny) #observation noise covariance
+                M = 2.0*np.eye(ny) #observation noise covariance
                 mu_v = 0.5*np.ones((ny, 1))
             elif noise_dist =="quadratic":
                 v_min = -1.0*np.ones(ny)
-                v_max = 1.5*np.ones(ny)
+                v_max = 2.0*np.ones(ny)
                 mu_v = (0.5*(v_max + v_min))[..., np.newaxis]
                 M = 3.0/20.0 *np.diag((v_max-v_min)**2) #observation noise covariance
             elif noise_dist == "uniform":
@@ -304,9 +268,11 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T,infinite,
             wdrc.backward()
             drce.backward()
             lqg.backward()
+            
             # Save the optimzed lambda
             WDRC_lambda[idx_w][idx_v] = wdrc.lambda_
             DRCE_lambda[idx_w][idx_v] = drce.lambda_
+                
             print('---------------------')
             
             #----------------------------
@@ -382,39 +348,38 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T,infinite,
                 save_data(path + 'wdrc' + theta_w_ + '.pkl', J_WDRC_mean)
                 
             save_data(path + 'lqg.pkl', J_LQG_mean)
+
+            save_data(path + 'longT_wdrc_lambda.pkl',WDRC_lambda)
+            save_data(path + 'longT_drce_lambda.pkl',DRCE_lambda)
             
-            save_data(path + 'nx21_wdrc_lambda.pkl',WDRC_lambda)
-            save_data(path + 'nx21_drce_lambda.pkl',DRCE_lambda)
-    
             #Summarize and plot the results
             print('\n-------Summary-------')
             print("dist : ", dist,"/ noise dist : ", noise_dist, "/ num_samples : ", num_samples, "/ num_noise_samples : ", num_noise, "/seed : ", seed)
             pass
-            
-    # for noise_dist in noisedist:
-    #     for idx_w, dist_parameter in enumerate(dist_parameter_list):
-    #         for idx_v, theta in enumerate(theta_v_list):
-    #             perform_simulation(lambda_, noise_dist, dist_parameter, theta, idx_w, idx_v)
-                
+    
     combinations = [(dist_parameter, theta, idx_w, idx_v) for idx_w, dist_parameter in enumerate(dist_parameter_list) for idx_v, theta in enumerate(theta_v_list)]
     for noise_dist in noisedist:
         results = Parallel(n_jobs=-1)(
                     delayed(perform_simulation)(lambda_, noise_dist, dist_parameter, theta, idx_w, idx_v)
                     for dist_parameter, theta, idx_w, idx_v in combinations
-                )        
-                
+                )
+    # for noise_dist in noisedist:
+    #     for dist_parameter, theta, idx_w, idx_v in combinations:
+    #         perform_simulation(lambda_, noise_dist, dist_parameter, theta, idx_w, idx_v)
+                    
+
     print("Params data generation Completed !")
-    print("Please make sure your lambda_list(or theta_w_list) and theta_v_list in plot_params.py is as desired")
+    print("Please make sure your lambda_list(or theta_w_list) and theta_v_list in plot_parms.py is as desired")
     if infinite:
         if use_lambda:
-            print("Now use : python plot_params_21.py --infinite --use_lambda --dist "+ dist + " --noise_dist " + noise_dist)
+            print("Now use : python plot_params_long.py --infinite --use_lambda --dist "+ dist + " --noise_dist " + noise_dist)
         else:
-            print("Now use : python plot_params_21.py --infinite --dist "+ dist + " --noise_dist " + noise_dist)
+            print("Now use : python plot_params_long.py --infinite --dist "+ dist + " --noise_dist " + noise_dist)
     else:
         if use_lambda:
-            print("Now use : python plot_params_21.py --use_lambda --dist "+ dist + " --noise_dist " + noise_dist)
+            print("Now use : python plot_params_long.py --use_lambda --dist "+ dist + " --noise_dist " + noise_dist)
         else:
-            print("Now use : python plot_params_21.py --dist "+ dist + " --noise_dist " + noise_dist)
+            print("Now use : python plot_params_long.py --dist "+ dist + " --noise_dist " + noise_dist)
     
             
 
@@ -423,9 +388,9 @@ if __name__ == "__main__":
     parser.add_argument('--dist', required=False, default="normal", type=str) #disurbance distribution (normal or uniform or quadratic)
     parser.add_argument('--noise_dist', required=False, default="normal", type=str) #noise distribution (normal or uniform or quadratic)
     parser.add_argument('--num_sim', required=False, default=500, type=int) #number of simulation runs
-    parser.add_argument('--num_samples', required=False, default=10, type=int) #number of disturbance samples
-    parser.add_argument('--num_noise_samples', required=False, default=10, type=int) #number of noise samples
-    parser.add_argument('--horizon', required=False, default=20, type=int) #horizon length
+    parser.add_argument('--num_samples', required=False, default=15, type=int) #number of disturbance samples
+    parser.add_argument('--num_noise_samples', required=False, default=15, type=int) #number of noise samples
+    parser.add_argument('--horizon', required=False, default=200, type=int) #horizon length
     parser.add_argument('--plot', required=False, action="store_true") #plot results+
     parser.add_argument('--infinite', required=False, action="store_true") #infinite horizon settings if flagged
     
