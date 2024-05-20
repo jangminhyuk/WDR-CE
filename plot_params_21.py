@@ -38,8 +38,6 @@ def summarize_lambda(lqg_lambda_values, lqg_theta_v_values, lqg_cost_values ,wdr
         (lambda_grid_lqg, theta_v_grid_lqg), method='cubic'
     )
 
-    # Plot data points - LQG
-    #ax.scatter(lqg_lambda_values, lqg_theta_values, lqg_cost_values, label='LQG')
 
     # Plot smooth surface - LQG
     surface_lqg =ax.plot_surface(lambda_grid_lqg, theta_v_grid_lqg, cost_grid_lqg, alpha=0.5, color='red', label='LQG')
@@ -58,18 +56,14 @@ def summarize_lambda(lqg_lambda_values, lqg_theta_v_values, lqg_cost_values ,wdr
         (lambda_grid_wdrc, theta_v_grid_wdrc), method='linear'  # Use linear interpolation
     )
 
-    # Plot data points - WDRC
-    #ax.scatter(wdrc_lambda_values, wdrc_theta_values, wdrc_cost_values, label='WDRC')
-
     # Plot smooth surface - WDRC
     surface_wdrc =ax.plot_surface(lambda_grid_wdrc, theta_v_grid_wdrc, cost_grid_wdrc, alpha=0.6, color='blue', label='WDRC')
     surfaces.append(surface_wdrc)
     labels.append('WDRC [3]')
     #--------------
-    # Plot DRKF data points
-    #ax.scatter(drkf_lambda_values, drkf_theta_values, drkf_cost_values, label='DRKF')
+    
 
-    # Interpolate cost values for smooth surface - DRKF
+    # Interpolate cost values for smooth surface - DRCE
     lambda_grid_drce, theta_v_grid_drce = np.meshgrid(
         np.linspace(min(drce_lambda_values), max(drce_lambda_values), 100),
         np.linspace(min(drce_theta_v_values), max(drce_theta_v_values), 100)
@@ -128,8 +122,6 @@ def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,w
         (theta_w_grid_lqg, theta_v_grid_lqg), method='cubic'
     )
 
-    # Plot data points - LQG
-    #ax.scatter(lqg_lambda_values, lqg_theta_values, lqg_cost_values, label='LQG')
 
     # Plot smooth surface - LQG
     surface_lqg =ax.plot_surface(theta_w_grid_lqg, theta_v_grid_lqg, cost_grid_lqg, alpha=0.5, color='red', label='LQG')
@@ -148,16 +140,14 @@ def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,w
         (theta_w_grid_wdrc, theta_v_grid_wdrc), method='linear'  # Use linear interpolation
     )
 
-    # Plot data points - WDRC
-    #ax.scatter(wdrc_lambda_values, wdrc_theta_values, wdrc_cost_values, label='WDRC')
+    
 
     # Plot smooth surface - WDRC
     surface_wdrc =ax.plot_surface(theta_w_grid_wdrc, theta_v_grid_wdrc, cost_grid_wdrc, alpha=0.6, color='blue', label='WDRC', antialiased=False)
     surfaces.append(surface_wdrc)
     labels.append('WDRC [3]')
     #--------------
-    # Plot DRKF data points
-    #ax.scatter(drkf_lambda_values, drkf_theta_values, drkf_cost_values, label='DRKF')
+    
 
     # Interpolate cost values for smooth surface - DRKF
     theta_w_grid_drce, theta_v_grid_drce = np.meshgrid(
@@ -202,16 +192,10 @@ if __name__ == "__main__":
     parser.add_argument('--use_lambda', required=False, action="store_true") #use lambda results if flagged
     args = parser.parse_args()
     
-    if args.infinite:
-        if args.use_lambda:
-            path = "./results/{}_{}/infinite/multiple/params_lambda/".format(args.dist, args.noise_dist)
-        else:
-            path = "./results/{}_{}/infinite/multiple/params_thetas/".format(args.dist, args.noise_dist)
+    if args.use_lambda:
+        path = "./results/{}_{}/finite/multiple/params_lambda/s21/".format(args.dist, args.noise_dist)
     else:
-        if args.use_lambda:
-            path = "./results/{}_{}/finite/multiple/params_lambda/".format(args.dist, args.noise_dist)
-        else:
-            path = "./results/{}_{}/finite/multiple/params_thetas/".format(args.dist, args.noise_dist)
+        path = "./results/{}_{}/finite/multiple/params_thetas/s21/".format(args.dist, args.noise_dist)
 
     #Load data
     drce_theta_w_values =[]
@@ -228,12 +212,8 @@ if __name__ == "__main__":
     lqg_lambda_values = []
     lqg_theta_v_values = []
     lqg_cost_values = []
-    # theta_v_list = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0]
-    # lambda_list = [ 6, 8, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
     
     # TODO : Modify the theta_v_list and lambda_list below to match your experiments!!! 
-    # theta_v_list = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]
-    # lambda_list = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
     
     theta_v_list = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
     theta_w_list = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
@@ -290,20 +270,20 @@ if __name__ == "__main__":
                     theta_w_value = float(match_wdrc.group(1))  # Extract theta_w value
                     theta_w_str = match_wdrc.group(2)
                     theta_w_value += float(theta_w_str)/10
-                #print('theta w : ', theta_w_value)
+                
                 wdrc_file = open(path + filename, 'rb')
                 wdrc_cost = pickle.load(wdrc_file)
                 wdrc_file.close()
-                #print(wdrc_cost[0])
+                
                 for aux_theta_v in theta_v_list:
                     if args.use_lambda:
                         wdrc_lambda_values.append(lambda_value)
                     else:
                         wdrc_theta_w_values.append(theta_w_value)
-                    #print(wdrc_cost[0])
+                    
                     wdrc_theta_v_values.append(aux_theta_v) # since wdrc not affected by theta v, just add auxilary theta for plot
                     wdrc_cost_values.append(wdrc_cost[0])
-                    #print(wdrc_cost[0])
+                    
             else:
                 match_lqg = re.search(pattern_lqg, filename)
                 if match_lqg:
@@ -316,14 +296,14 @@ if __name__ == "__main__":
                                 lqg_lambda_values.append(aux_lambda)
                                 lqg_theta_v_values.append(aux_theta_v)
                                 lqg_cost_values.append(lqg_cost[0])
-                                #print(lqg_cost[0])
+                                
                     else:
                         for aux_theta_w in theta_w_list:
                             for aux_theta_v in theta_v_list:
                                 lqg_theta_w_values.append(aux_theta_w)
                                 lqg_theta_v_values.append(aux_theta_v)
                                 lqg_cost_values.append(lqg_cost[0])
-                                #print(lqg_cost[0])
+                                
                 
                     
 
