@@ -120,13 +120,13 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
         theta_v_list = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
         theta_w_list = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
     else:
-        theta_v_list = [0.3, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0] # radius of noise ambiguity set
-        theta_w_list = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
+        theta_v_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0] # radius of noise ambiguity set
+        theta_w_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
     lambda_list = [10, 20, 30, 40, 50] # disturbance distribution penalty parameter
     num_x0_samples = 15 #  N_x0 
     theta_x0 = 2.0 # radius of initial state ambiguity set
     use_lambda = False # If use_lambda=True, we will use lambda_list. If use_lambda=False, we will use theta_w_list
-    use_optimal_lambda = True
+    use_optimal_lambda = False
     if use_lambda:
         dist_parameter_list = lambda_list
     else:
@@ -139,8 +139,10 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     DRCE_lambda_file = open('./inputs/nonzero_qq/nonzero_drce_lambda.pkl', 'rb')
     DRCE_lambda = pickle.load(DRCE_lambda_file)
     DRCE_lambda_file.close()
-    #WDRC_lambda = np.zeros((6,8))
-    #DRCE_lambda = np.zeros((6,8))
+    
+    # Uncomment Below 2 lines to save optimal lambda, using your own distributions.
+    WDRC_lambda = np.zeros((7,9))
+    DRCE_lambda = np.zeros((7,9))
     for noise_dist in noisedist:
         for idx_w, dist_parameter in enumerate(dist_parameter_list):
             for idx_v, theta in enumerate(theta_v_list):

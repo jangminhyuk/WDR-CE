@@ -126,21 +126,44 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     #---------------------
     # You can change theta_v list and lambda_list ! but you also need to change lists at plot_params4_F.py to get proper plot
 
-    theta_v_list = [2.0, 4.0, 6.0, 8.0, 10.0] # radius of noise ambiguity set
-    theta_w_list = [2.0, 4.0, 6.0, 8.0, 10.0] # radius of noise ambiguity set
+    theta_v_list = [0.1, 1.0, 2.0, 4.0, 6.0, 8.0, 10.0] # radius of noise ambiguity set
+    theta_w_list = [0.1, 1.0, 2.0, 4.0, 6.0, 8.0, 10.0] # radius of noise ambiguity set
     lambda_list = [10, 20, 30, 40, 50] # disturbance distribution penalty parameter
 
     theta_x0 = 5.0 # radius of initial state ambiguity set  
-    use_lambda = True # If use_lambda is True, we will use lambda_list. If use_lambda is False, we will use theta_w_list
+    use_lambda = False # If use_lambda is True, we will use lambda_list. If use_lambda is False, we will use theta_w_list
     use_optimal_lambda = False
     if use_lambda:
         dist_parameter_list = lambda_list
     else:
         dist_parameter_list = theta_w_list
-        
+    
+    # # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
+    # if dist=="normal":
+    #     # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
+    #     WDRC_lambda_file = open('./inputs/zero_nn/zero_wdrc_lambda.pkl', 'rb')
+    #     WDRC_lambda = pickle.load(WDRC_lambda_file)
+    #     WDRC_lambda_file.close()
+    #     DRCE_lambda_file = open('./inputs/zero_nn/zero_drce_lambda.pkl', 'rb')
+    #     DRCE_lambda = pickle.load(DRCE_lambda_file)
+    #     DRCE_lambda_file.close()
+    # else:
+    #     # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
+    #     WDRC_lambda_file = open('./inputs/zero_qq/zero_wdrc_lambda.pkl', 'rb')
+    #     WDRC_lambda = pickle.load(WDRC_lambda_file)
+    #     WDRC_lambda_file.close()
+    #     DRCE_lambda_file = open('./inputs/zero_qq/zero_drce_lambda.pkl', 'rb')
+    #     DRCE_lambda = pickle.load(DRCE_lambda_file)
+    #     DRCE_lambda_file.close()
+    # Uncomment Below 2 lines to save optimal lambda, using your own distributions.
+    WDRC_lambda = np.zeros((9,9))
+    WDRC_DRKF_lambda = np.zeros((9,9))
+    WDRC_DRMMSE_lambda = np.zeros((9,9))
+    DRCE_lambda = np.zeros((9,9))
+    
     for noise_dist in noisedist:
-        for dist_parameter in dist_parameter_list:
-            for theta in theta_v_list:
+        for idx_w, dist_parameter in enumerate(dist_parameter_list):
+            for idx_v, theta in enumerate(theta_v_list):
                 for num_noise in num_noise_list:
                     
                     np.random.seed(seed) # fix Random seed!
@@ -218,17 +241,24 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     system_data = (A, B, C, Q, Qf, R, M)
                     
                     #-------Perform n independent simulations and summarize the results-------
-                    output_lqg_list = []
+                    
                     output_wdrc_list = []
                     output_wdrc_drkf_list = []
                     output_drce_list = []
                     output_drcmmse_list = []
                     
                     #Initialize controllers
-                    
-                    wdrc = WDRC(lambda_, theta_w, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat, M_hat, x0_mean_hat[0], x0_cov_hat[0], use_lambda)
+                    if use_optimal_lambda == True:
+                        lambda_ = WDRC_lambda[idx_w][idx_v]
+                    wdrc = WDRC(lambda_, theta_w, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat, M_hat, x0_mean_hat[0], x0_cov_hat[0], use_lambda, use_optimal_lambda)
+                    if use_optimal_lambda == True:
+                        lambda_ = DRCE_lambda[idx_w][idx_v]
                     drce = DRCE(lambda_, theta_w, theta, theta_x0, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat,  M_hat, x0_mean_hat[0], x0_cov_hat[0], use_lambda, use_optimal_lambda)
+                    if use_optimal_lambda == True:
+                        lambda_ = WDRC_DRKF_lambda[idx_w][idx_v]
                     wdrcdrkf = WDRCDRKF(lambda_, theta_w, theta, theta_x0, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat,  M_hat, x0_mean_hat[0], x0_cov_hat[0], use_lambda, use_optimal_lambda)
+                    if use_optimal_lambda == True:
+                        lambda_ = WDRC_DRMMSE_lambda[idx_w][idx_v]
                     drcmmse = DRCMMSE(lambda_, theta_w, theta, theta_x0, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat,  M_hat, x0_mean_hat[0], x0_cov_hat[0], use_lambda, use_optimal_lambda)
                     
                     wdrcdrkf.backward()
@@ -366,7 +396,10 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                         save_data(path + 'wdrc_mse' + theta_w_ + '.pkl', J_MSE_WDRC_mean)
                         
                         
-                    
+                    save_data(path + 'nonzero_wdrc_lambda.pkl',WDRC_lambda)
+                    save_data(path + 'nonzero_wdrc_drkf_lambda.pkl',WDRC_DRKF_lambda)
+                    save_data(path + 'nonzero_wdrc_drmmse_lambda.pkl',WDRC_DRMMSE_lambda)
+                    save_data(path + 'nonzero_drce_lambda.pkl',DRCE_lambda)
             
                     #Summarize and plot the results
                     print('\n-------Summary-------')
