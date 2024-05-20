@@ -166,19 +166,14 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T, plot_res
     lambda_ = 20 # will not be used if the parameter "use_lambda = False"
     noisedist = [noise_dist1]
     
-    theta_v_list = [0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0] # radius of noise ambiguity set
+    theta_v_list = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0] # radius of noise ambiguity set
     theta_w_list = [0.1] #[0.5, 1.0, 1.5, 2.0, 2.5, 3.0] # 0.5 radius of noise ambiguity set 0.5, 1.0
     theta_x0 = 0.5
     #theta_v_list = [0.5]
-    num_noise_list = [15, 20, 30, 40, 50, 100] 
+    num_noise_list = [10, 15, 20] 
     # Save lambda list
     WDRC_lambda, DRCE_lambda = [],[]
-    # if use_lambda == True and dist=="normal":
-    #     WDRC_lambda = np.array([26.41121764, 26.16612111, 26.21934116,26.21934116, 26.36159012, 26.3621963, 26.42347884, 26.43546194, 26.42452678 ])
-    #     DRCE_lambda = np.array([34.91749428, 40.98912609, 39.05410236, 38.13329201, 38.13329201, 46.68884815, 38.21829064, 45.01168795, 39.02915113])
-    # if use_lambda == True and dist=="quadratic":
-    #     WDRC_lambda = np.array([18.73975602, 18.67355442, 18.65363162, 18.68274912, 18.67348403, 18.69286136, 18.69810686, 18.7043255])
-    #     DRCE_lambda = np.array([22.9903849, 23.78663288, 23.88587422,23.72079564, 24.0604179, 24.02581889, 24.07412486, 24.08671891])
+    
         
     for noise_dist in noisedist:
         for theta_w in theta_w_list:
