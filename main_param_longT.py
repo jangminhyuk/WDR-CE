@@ -149,6 +149,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
         DRCE_lambda = pickle.load(DRCE_lambda_file)
         DRCE_lambda_file.close()
     
+    
     # Uncomment Below 2 lines to save optimal lambda, using your own distributions.
     # WDRC_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
     # DRCE_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))

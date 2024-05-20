@@ -68,10 +68,8 @@ if __name__ == "__main__":
     
     
     print('\n-------Summary-------')
-    if args.infinite:
-        path = "./results/{}_{}/infinite/multiple/DRLQC/".format(args.dist, args.noise_dist)
-    else:
-        path = "./results/{}_{}/finite/multiple/DRLQC".format(args.dist, args.noise_dist)
+    
+    path = "./results/{}_{}/finite/multiple/DRLQC".format(args.dist, args.noise_dist)
     
     
     

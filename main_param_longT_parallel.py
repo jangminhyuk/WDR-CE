@@ -111,8 +111,8 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     B = C = Q = R = Qf = np.eye(10) 
     #----------------------------
     # You can change theta_v list and lambda_list ! but you also need to change lists at plot_params.py to get proper plot
-    theta_v_list = [0.1, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] #[1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
-    theta_w_list = [0.5] # radius of noise ambiguity set need to run 2.0 - 3, 4, 5, 6
+    theta_v_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] #[1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
+    theta_w_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set need to run 2.0 - 3, 4, 5, 6
     
     if dist=='normal':
         theta_x0 = 1.0 # radius of initial state ambiguity set
@@ -129,12 +129,12 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
         dist_parameter_list = theta_w_list
     
     # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
-    WDRC_lambda_file = open('./inputs/nonzero_qq/nonzero_wdrc_lambda.pkl', 'rb')
-    WDRC_lambda = pickle.load(WDRC_lambda_file)
-    WDRC_lambda_file.close()
-    DRCE_lambda_file = open('./inputs/nonzero_qq/nonzero_drce_lambda.pkl', 'rb')
-    DRCE_lambda = pickle.load(DRCE_lambda_file)
-    DRCE_lambda_file.close()
+    # WDRC_lambda_file = open('./inputs/nonzero_qq/nonzero_wdrc_lambda.pkl', 'rb')
+    # WDRC_lambda = pickle.load(WDRC_lambda_file)
+    # WDRC_lambda_file.close()
+    # DRCE_lambda_file = open('./inputs/nonzero_qq/nonzero_drce_lambda.pkl', 'rb')
+    # DRCE_lambda = pickle.load(DRCE_lambda_file)
+    # DRCE_lambda_file.close()
     
     # Uncomment Below 2 lines to save optimal lambda, using your own distributions.
     WDRC_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
@@ -155,9 +155,9 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
             
             
             if use_lambda:
-                path = "./results/{}_{}/finite/multiple/params_lambda/".format(dist, noise_dist)
+                path = "./results/{}_{}/finite/multiple/params_lambda/longT/".format(dist, noise_dist)
             else:
-                path = "./results/{}_{}/finite/multiple/params_thetas/".format(dist, noise_dist)
+                path = "./results/{}_{}/finite/multiple/params_thetas/longT/".format(dist, noise_dist)
                 
             if not os.path.exists(path):
                 os.makedirs(path)
