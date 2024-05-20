@@ -6,9 +6,6 @@ import argparse
 from controllers.LQG import LQG
 from controllers.WDRC import WDRC
 from controllers.DRCE import DRCE
-from controllers.inf_LQG import inf_LQG
-from controllers.inf_WDRC import inf_WDRC
-from controllers.inf_DRCE import inf_DRCE
 from joblib import Parallel, delayed
 
 import os

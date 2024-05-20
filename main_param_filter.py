@@ -138,7 +138,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     else:
         dist_parameter_list = theta_w_list
     
-    # # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
+    # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
     # if dist=="normal":
     #     # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
     #     WDRC_lambda_file = open('./inputs/zero_nn/zero_wdrc_lambda.pkl', 'rb')
@@ -155,7 +155,8 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     #     DRCE_lambda_file = open('./inputs/zero_qq/zero_drce_lambda.pkl', 'rb')
     #     DRCE_lambda = pickle.load(DRCE_lambda_file)
     #     DRCE_lambda_file.close()
-    # Uncomment Below 2 lines to save optimal lambda, using your own distributions.
+    # # Uncomment Below 4 lines to save optimal lambda, using your own distributions.
+    
     WDRC_lambda = np.zeros((9,9))
     WDRC_DRKF_lambda = np.zeros((9,9))
     WDRC_DRMMSE_lambda = np.zeros((9,9))
@@ -396,10 +397,10 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                         save_data(path + 'wdrc_mse' + theta_w_ + '.pkl', J_MSE_WDRC_mean)
                         
                         
-                    save_data(path + 'nonzero_wdrc_lambda.pkl',WDRC_lambda)
-                    save_data(path + 'nonzero_wdrc_drkf_lambda.pkl',WDRC_DRKF_lambda)
-                    save_data(path + 'nonzero_wdrc_drmmse_lambda.pkl',WDRC_DRMMSE_lambda)
-                    save_data(path + 'nonzero_drce_lambda.pkl',DRCE_lambda)
+                    save_data(path + 'filter_wdrc_lambda.pkl',WDRC_lambda)
+                    save_data(path + 'filter_wdrc_drkf_lambda.pkl',WDRC_DRKF_lambda)
+                    save_data(path + 'filter_wdrc_drmmse_lambda.pkl',WDRC_DRMMSE_lambda)
+                    save_data(path + 'filter_drce_lambda.pkl',DRCE_lambda)
             
                     #Summarize and plot the results
                     print('\n-------Summary-------')
