@@ -329,7 +329,7 @@ class WDRCDRKF:
         params = prob.parameters()
         Sigma = np.block([[X_hat, X_hat @ self.C.T],
                          [self.C @ X_hat , self.C @ X_hat @ self.C.T + M_hat]])
-        print(Sigma.shape)
+        #print(Sigma.shape)
         params[0].value = Sigma
         params[1].value = np.sqrt(self.theta_v**2 + self.theta_x0**2) 
         
