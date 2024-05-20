@@ -119,16 +119,16 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     # Sample size
     num_x0_samples = 20 #  x0 samples 
     if dist=='normal':
-        num_samples=num_noise_samples=15
-        num_x0_samples=10
+        num_samples=num_noise_samples=20
+        num_x0_samples=20
     else:
         num_samples=num_noise_samples=num_x0_samples=20
     num_noise_list = [num_noise_samples]
     #---------------------
     # You can change theta_v list and lambda_list ! but you also need to change lists at plot_params4_F.py to get proper plot
 
-    theta_v_list = [0.1, 1.0, 2.0, 4.0, 6.0, 8.0] # radius of noise ambiguity set
-    theta_w_list = [0.1, 1.0, 2.0, 4.0, 6.0, 8.0] # radius of noise ambiguity set
+    theta_v_list = [1.0, 2.0, 4.0, 6.0, 8.0] # radius of noise ambiguity set
+    theta_w_list = [1.0, 2.0, 4.0, 6.0, 8.0] # radius of noise ambiguity set
     lambda_list = [10, 20, 30, 40, 50] # disturbance distribution penalty parameter
     theta_x0 = 5.0 # radius of initial state ambiguity set  
     use_lambda = False # If use_lambda is True, we will use lambda_list. If use_lambda is False, we will use theta_w_list
