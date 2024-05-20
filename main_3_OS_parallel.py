@@ -23,7 +23,7 @@ def perform_simulation(i, lambda_, num_sim, use_lambda, WDRC_lambda, DRCE_lambda
     if use_lambda:  # If we use pre-calculated lambda
         lambda_ = DRCE_lambda[idx]
         
-    drce_ = DRCE(lambda_, theta_w, theta_v, theta_x0, T, dist, noise_dist, system_data, mu_hat[i], Sigma_hat[i], x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat[i],  M_hat[i], x0_mean_hat[i][0], x0_cov_hat[i][0], use_lambda)
+    drce_ = DRCE(lambda_, theta_w, theta_v, theta_x0, T, dist, noise_dist, system_data, mu_hat[i], Sigma_hat[i], x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat[i],  M_hat[i], x0_mean_hat[i][0], x0_cov_hat[i][0], use_lambda, False)
     
     #lqg_ = LQG(T, dist, noise_dist, system_data, mu_hat[i], Sigma_hat[i], x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat[i], M_hat[i], x0_mean_hat[i][0], x0_cov_hat[i][0])
     
