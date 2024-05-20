@@ -216,7 +216,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
             # Nominal Noise distribution
             v_mean_hat, M_hat = gen_sample_dist(noise_dist, T+1, num_noise, mu_w=mu_v, Sigma_w=M, w_max=v_max, w_min=v_min)
             
-            M_hat = M_hat + 1e-6*np.eye(ny) # to prevent numerical error from inverse in standard KF at small sample size
+            M_hat = M_hat + 1e-5*np.eye(ny) # to prevent numerical error from inverse in standard KF at small sample size
             
             #-------Create a random system-------
             system_data = (A, B, C, Q, Qf, R, M)
