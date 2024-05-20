@@ -12,31 +12,16 @@ import os
 import pickle
 
 # Define the function to be parallelized
-def perform_simulation(i, lambda_, num_sim, use_lambda, WDRC_lambda, DRCE_lambda, idx, theta_w, theta_v, theta_x0, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat, M_hat, x0_mean_hat, x0_cov_hat):
+def perform_simulation(i, lambda_, num_sim, use_lambda, use_optimal_lambda, WDRC_lambda, DRCE_lambda, idx, theta_w, theta_v, theta_x0, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat, M_hat, x0_mean_hat, x0_cov_hat):
     print("iteration ", i, "/", num_sim)
     
-    # if use_lambda:  # If we use pre-calculated lambda
-    #     lambda_ = WDRC_lambda[idx]
-        
-    # wdrc_ = WDRC(lambda_, theta_w, T, dist, noise_dist, system_data, mu_hat[i], Sigma_hat[i], x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat[i], M_hat[i], x0_mean_hat[i][0], x0_cov_hat[i][0], use_lambda)
-    
-    if use_lambda:  # If we use pre-calculated lambda
-        lambda_ = DRCE_lambda[idx]
-        
-    drce_ = DRCE(lambda_, theta_w, theta_v, theta_x0, T, dist, noise_dist, system_data, mu_hat[i], Sigma_hat[i], x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat[i],  M_hat[i], x0_mean_hat[i][0], x0_cov_hat[i][0], use_lambda)
-    
-    #lqg_ = LQG(T, dist, noise_dist, system_data, mu_hat[i], Sigma_hat[i], x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat[i], M_hat[i], x0_mean_hat[i][0], x0_cov_hat[i][0])
-    
-    
+    if use_optimal_lambda:  # If we use pre-calculated lambda
+        lambda_ = DRCE_lambda[i][0]
+    drce_ = DRCE(lambda_, theta_w, theta_v, theta_x0, T, dist, noise_dist, system_data, mu_hat[i], Sigma_hat[i], x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat[i],  M_hat[i], x0_mean_hat[i][0], x0_cov_hat[i][0], use_lambda, use_optimal_lambda)
     drce_.backward()
-    #wdrc_.backward()
-    #lqg_.backward()
     
     result = {
-        #'wdrc': wdrc_,
         'drce': drce_,
-        #'lqg': lqg_,
-        #'WDRC_lambda': wdrc_.lambda_ if not use_lambda else None,
         'DRCE_lambda': drce_.lambda_ if not use_lambda else None
     }
     return result
@@ -143,6 +128,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     seed = 2024 # Random seed !  any value
     np.random.seed(seed) # fix Random seed!
     
+    num_noise_list = [num_noise_samples]
     num_x0_samples = 15 # num x0 samples 
     # for the noise_plot_results!!
     output_J_LQG_mean, output_J_WDRC_mean, output_J_DRCE_mean=[], [], []
@@ -158,28 +144,33 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     #----------------------------
     # change True to False if you don't want to use given lambda
     use_lambda = False
-    use_optimal_lambda = False
+    use_optimal_lambda = True
     lambda_ = 20 # will not be used if the parameter "use_lambda = False"
     noisedist = [noise_dist1]
     
-    #theta_v_list = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0] # radius of noise ambiguity set
-    #theta_w_list = [0.1] #[0.5, 1.0, 1.5, 2.0, 2.5, 3.0] # 0.5 radius of noise ambiguity set 0.5, 1.0
+    #theta_v_list = [0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0] # radius of noise ambiguity set
     theta_w_list = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-    theta_v = 0.5
     theta_x0 = 0.5
-    
     num_noise_list = [10, 15, 20] 
-    # Save lambda list
-    WDRC_lambda, DRCE_lambda = [],[]
-        
+    
     for noise_dist in noisedist:
         for theta_w in theta_w_list:
-                DRCE_lambda = [] # Lambda list 
-                theta = theta_v
+                WDRC_lambda, DRCE_lambda = [],[]
+                theta = theta_w
                 #for theta in theta_v_list:
                 for idx, num_noise in enumerate(num_noise_list):
+                    # Use N = N_w = N_v = N_x0
                     num_samples = num_noise
                     num_x0_samples = num_noise
+                    theta_ = f"_{str(theta).replace('.', '_')}" # change 1.0 to 1_0 for file name
+                    
+                    # Load Lambda
+                    DRCE_lambda_file = open('./inputs/OS/N={}/drce_lambda_{}.pkl'.format(num_noise,theta_), 'rb')
+                    DRCE_lambda = pickle.load(DRCE_lambda_file)
+                    DRCE_lambda_file.close()
+                    
+                    
+                    
                     print("disturbance : ", dist, "/ noise : ", noise_dist, "/ num_noise : ", num_noise, "/ theta_w : ", theta_w, "/ theta_v : ", theta)
                     np.random.seed(seed) # fix Random seed!
                     print("--------------------------------------------")
@@ -257,13 +248,10 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     
                     # Parallelize the simulations
                     results = Parallel(n_jobs=-1)(
-                        delayed(perform_simulation)(i, lambda_, num_sim, use_lambda, WDRC_lambda, DRCE_lambda, idx, theta_w, theta, theta_x0, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat, M_hat, x0_mean_hat, x0_cov_hat)
+                        delayed(perform_simulation)(i, lambda_, num_sim, use_lambda, use_optimal_lambda, WDRC_lambda, DRCE_lambda, idx, theta_w, theta, theta_x0, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat, M_hat, x0_mean_hat, x0_cov_hat)
                         for i in range(num_sim)
                     )
-                    # results = []
-                    # for i in range(num_sim):
-                    #     result = perform_simulation(i, lambda_, num_sim, use_lambda, WDRC_lambda, DRCE_lambda, idx, theta_w, theta, theta_x0, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat, M_hat, x0_mean_hat, x0_cov_hat)
-                    #     results.append(result)
+                    
                         
                     # Process results
                     lqg = []
@@ -271,19 +259,14 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     drce = []
                     
                     for result in results:
-                        #lqg.append(result['lqg'])
-                        #wdrc.append(result['wdrc'])
                         drce.append(result['drce'])
-                        if not use_lambda:
-                            #WDRC_lambda.append(result['WDRC_lambda'])
-                            DRCE_lambda.append(result['DRCE_lambda'])
+                        # if not use_lambda:
+                        #     DRCE_lambda.append(result['DRCE_lambda'])
     
                     
                         
                     print('---------------------')
                     output_drce = np.empty(num_sim, dtype=object)
-                    #output_wdrc = np.empty(num_sim, dtype=object)
-                    #output_lqg = np.empty(num_sim, dtype=object)
                     drce_cert = np.empty(num_sim)
                     os_sample_size = 1000
                     
@@ -294,53 +277,11 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     for i, (cert, samples) in enumerate(results_drce):
                         drce_cert[i] = cert
                         output_drce[i] = samples
+                
                     
-                    # # Parallel execution for WDRC
-                    # print("Running WDRC Forward step ...")
-                    # results_wdrc = Parallel(n_jobs=-1)(delayed(wdrc_forward_step)(wdrc, i, os_sample_size) for i in range(num_sim))
-                    # for i, samples in enumerate(results_wdrc):
-                    #     output_wdrc[i] = samples
-                    
-                    # # Parallel execution for LQG
-                    # print("Running LQG Forward step ...")
-                    # results_lqg = Parallel(n_jobs=-1)(delayed(lqg_forward_step)(lqg, i, os_sample_size) for i in range(num_sim))
-                    # for i, samples in enumerate(results_lqg):
-                    #     output_lqg[i] = samples
-    
-                    #-- Out-of-sample performance result SAVE -- #
                 
                     J_LQG_OS_list, J_WDRC_OS_list, J_DRCE_OS_list= [], [], []
-                    # #lqg-----------------------
-                    # for i in range(num_sim):
-                    #     J_LQG_list = []
-                    #     for out in output_lqg[i]:
-                    #         J_LQG_list.append(out['cost'][0])
-                        
-                    #     # Average cost when using lqg[i] controller   
-                    #     J_LQG_mean= np.mean(J_LQG_list)
-                    #     J_LQG_OS_list.append(J_LQG_mean)
-                       
                     
-                    # output_J_LQG_mean.append( np.mean(J_LQG_OS_list) )
-                    # output_J_LQG_std.append( np.std(J_LQG_OS_list) )
-                    
-                    # print(" Out-of-Sample cost (LQG) : ", np.mean(J_LQG_OS_list))
-                    
-                    # #wdrc-----------------------
-                    # for i in range(num_sim):
-                    #     J_WDRC_list = []
-                    #     for out in output_wdrc[i]:
-                    #         J_WDRC_list.append(out['cost'][0])
-                        
-                    #     # Average cost when using wdrc[i] controller   
-                    #     J_WDRC_mean= np.mean(J_WDRC_list)
-                    #     J_WDRC_OS_list.append(J_WDRC_mean)
-                       
-                    
-                    # output_J_WDRC_mean.append( np.mean(J_WDRC_OS_list) )
-                    # output_J_WDRC_std.append( np.std(J_WDRC_OS_list) )
-                    
-                    # print(" Out-of-Sample cost (WDRC) : ", np.mean(J_WDRC_OS_list))
                     
                     DRCE_prob = np.empty(num_sim)
                     #drce-----------------------
@@ -372,47 +313,20 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     
                     save_data(path + 'drce_prob_os_' + theta_w_ + 'and' + theta_v_+ '.pkl', output_DRCE_prob)
 
-                    # save_data(path + 'wdrc_mean_os_' + theta_w_ + '.pkl', output_J_WDRC_mean)
-                    # save_data(path + 'wdrc_std_os_' + theta_w_ + '.pkl', output_J_WDRC_std)
-                    
-                    # save_data(path + 'lqg_mean_os.pkl', output_J_LQG_mean)
-                    # save_data(path + 'lqg_std_os.pkl', output_J_LQG_std)
                     
                     # -- Lambda Save -- 
-                    save_data(path + 'drce_lambda_' + theta_w_ + 'and' + theta_v_+ '.pkl', DRCE_lambda)
-                    #save_data(path + 'wdrc_lambda_' + theta_w_ + '.pkl', WDRC_lambda)
+                    #save_data(path + 'drce_lambda_' + theta_w_ + 'and' + theta_v_+ '.pkl', DRCE_lambda)
                     #-------------------------------
                     print("num_noise_sample : ", num_noise, " / finished with dist : ", dist, "/ noise_dist : ", noise_dist, "/ seed : ", seed)
             
 
             
                         
-                # # after running noise_samples lists!
-                # if noise_plot_results:
-                #     if infinite:
-                #         path = "./results/{}_{}/infinite/multiple/num_noise_plot/".format(dist, noise_dist)
-                #     else:
-                #         path = "./results/{}_{}/finite/multiple/num_noise_plot/".format(dist, noise_dist)
-                #     if not os.path.exists(path):
-                #         os.makedirs(path)
-                #     save_data(path + 'drce_mean.pkl', output_J_DRCE_mean)
-                #     save_data(path + 'drce_std.pkl', output_J_DRCE_std)  
-                #     save_data(path + 'lqg_mean.pkl', output_J_LQG_mean)
-                #     save_data(path + 'lqg_std.pkl', output_J_LQG_std) 
-                #     save_data(path + 'wdrc_mean.pkl', output_J_WDRC_mean)
-                #     save_data(path + 'wdrc_std.pkl', output_J_WDRC_std) 
-                    
-                #     #Summarize and plot the results
-                #     print('\n-------Summary-------')
-                #     print("dist : ", dist, "noise_dist : ", noise_dist, "/ num_disturbance_samples : ", num_samples, "/ theta_v : ", theta, " / noise sample effect PLOT / Seed : ",seed)
-                    
-                #     # reset
-                #     output_J_LQG_mean, output_J_WDRC_mean, output_J_DRCE_mean=[], [], []
-                #     output_J_LQG_std, output_J_WDRC_std, output_J_DRCE_std=[], [], []
                     
     print("Data generation Completed!!")
     
     
+
     
             
 

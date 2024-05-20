@@ -170,7 +170,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
         lambda_list = [15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
 
     theta_x0 = 0.5 # radius of initial state ambiguity set
-    use_lambda = False # If use_lambda is True, we will use lambda_list. If use_lambda is False, we will use theta_w_list
+    use_lambda = True # If use_lambda is True, we will use lambda_list. If use_lambda is False, we will use theta_w_list
     use_optimal_lambda = False
     if use_lambda:
         dist_parameter_list = lambda_list
