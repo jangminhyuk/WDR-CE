@@ -386,7 +386,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     print("Data generation Completed!!")
     
     if noise_plot_results:
-        print("For noise sample size effect plot : Use python plot_J.py --dist "+ dist + " --noise_dist " + noise_dist)
+        print("For noise sample size effect plot Use : python plot_J.py --dist "+ dist + " --noise_dist " + noise_dist)
     
             
 

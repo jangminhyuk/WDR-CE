@@ -14,7 +14,7 @@ and Distributionally Robust Control and Estimation(WDRCE) [Ours]
 - **[CVXPY](https://www.cvxpy.org/)**
 - **[MOSEK (>= 9.3)](https://www.mosek.com/)**
 - (pickle5) if relevant error occurs
-- joblib (>=1.4.2, Optional : Used for parallel computation of out-of-sample experiment)
+- joblib (>=1.4.2)
 ## Additional Requirements to run DRLQC paper
 - Pytorch 2.0
 - [Pymanopt] https://pymanopt.org/
