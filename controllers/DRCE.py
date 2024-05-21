@@ -254,6 +254,7 @@ class DRCE:
         
         prob.solve(solver=cp.MOSEK)
         if prob.status in ["infeasible", "unbounded"]:
+            print("theta_w : ", self.theta_w, " theta_v : ", self.theta_v)
             print(prob.status, 'False in DRCE SDP !!!!!!!!')
         
         sol = prob.variables()

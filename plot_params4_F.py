@@ -166,7 +166,7 @@ if __name__ == "__main__":
     else:
         pattern_drcmmse = r"drcmmse_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?and_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?"
         pattern_drce = r"drce_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?and_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?"
-        pattern_wdrc_drkf = r"wdrc_drkf(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?and_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?"
+        pattern_wdrc_drkf = r"wdrc_drkf_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?and_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?"
         pattern_wdrc = r"wdrc_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?"
     #pattern_lqg = r"lqg.pkl"
     # Iterate over each file in the directory
@@ -248,6 +248,7 @@ if __name__ == "__main__":
                         theta_v_value += float(theta_v_str)/10
                         #changed _1_5_ to 1.5!
                         # Store theta_w and theta values
+                        
                         wdrc_drkf_theta_w_values.append(theta_w_value)
                         wdrc_drkf_theta_v_values.append(theta_v_value)
                     
@@ -307,6 +308,7 @@ if __name__ == "__main__":
     wdrc_drkf_theta_v_values = np.array(wdrc_drkf_theta_v_values)
     wdrc_drkf_cost_values = np.array(wdrc_drkf_cost_values)
     
+    #print("wdrcdrkf ", wdrc_drkf_theta_w_values)
     
     summarize_lambda(wdrc_drkf_lambda_values, wdrc_drkf_theta_v_values, wdrc_drkf_cost_values ,wdrc_lambda_values, wdrc_theta_v_values, wdrc_cost_values , drce_lambda_values, drce_theta_v_values, drce_cost_values, drcmmse_lambda_values, drcmmse_theta_v_values, drcmmse_cost_values, args.dist, args.noise_dist,  args.use_lambda, path)
     

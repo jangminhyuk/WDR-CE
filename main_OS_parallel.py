@@ -130,9 +130,9 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     
     num_noise_list = [num_noise_samples]
     num_x0_samples = 15 # num x0 samples 
-    # for the noise_plot_results!!
-    output_J_LQG_mean, output_J_WDRC_mean, output_J_DRCE_mean=[], [], []
-    output_J_LQG_std, output_J_WDRC_std, output_J_DRCE_std=[], [], []
+    
+    output_J_DRCE_mean=[]
+    output_J_DRCE_std=[]
     output_DRCE_prob = []
     #-------Initialization-------
     nx = 10 #state dimension
@@ -148,7 +148,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     lambda_ = 20 # will not be used if the parameter "use_lambda = False"
     noisedist = [noise_dist1]
     
-    #theta_v_list = [0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0] # radius of noise ambiguity set
+    
     theta_w_list = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
     theta_x0 = 0.5
     num_noise_list = [10, 15, 20] 
@@ -254,8 +254,6 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     
                         
                     # Process results
-                    lqg = []
-                    wdrc = []
                     drce = []
                     
                     for result in results:
@@ -280,7 +278,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                 
                     
                 
-                    J_LQG_OS_list, J_WDRC_OS_list, J_DRCE_OS_list= [], [], []
+                    J_DRCE_OS_list= []
                     
                     
                     DRCE_prob = np.empty(num_sim)
@@ -318,11 +316,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     #save_data(path + 'drce_lambda_' + theta_w_ + 'and' + theta_v_+ '.pkl', DRCE_lambda)
                     #-------------------------------
                     print("num_noise_sample : ", num_noise, " / finished with dist : ", dist, "/ noise_dist : ", noise_dist, "/ seed : ", seed)
-            
-
-            
-                        
-                    
+                
     print("Data generation Completed!!")
     
     

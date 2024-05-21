@@ -20,13 +20,7 @@ def summarize_noise(num_noise_list, avg_cost_lqg, std_cost_lqg, avg_cost_wdrc, s
     J_wdrc_std = np.array(std_cost_wdrc[0:])
     J_drce_std = np.array(std_cost_drce[0:])
     
-    print(J_lqr_mean)
-    print(J_wdrc_mean)
-    print(J_drce_mean)
     
-    print(J_lqr_std)
-    print(J_wdrc_std)
-    print(J_drce_std)
     
     fig = plt.figure(figsize=(6,4), dpi=300)
     

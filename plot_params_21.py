@@ -97,92 +97,7 @@ def summarize_lambda(lqg_lambda_values, lqg_theta_v_values, lqg_cost_values ,wdr
     plt.show()
     fig.savefig(path + 'params_{}_{}_21.pdf'.format(dist, noise_dist), dpi=300, bbox_inches="tight", pad_inches=0.3)
     #plt.clf()
-    
-def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,wdrc_theta_w_values, wdrc_theta_v_values, wdrc_cost_values , drce_theta_w_values, drce_theta_v_values, drce_cost_values, dist, noise_dist, infinite, use_lambda, path):
-    
-    surfaces = []
-    labels = []
-    # Create 3D plot
-    plt.rcParams.update({
-    "text.usetex": True,
-    "text.latex.preamble": r"\usepackage{amsmath}",
-    })
-    fig = plt.figure(figsize=(8, 6))
-    ax = fig.add_subplot(111, projection='3d')
-    
-    # -------------------
-    # LQG
-    # Interpolate cost values for smooth surface - LQG
-    theta_w_grid_lqg, theta_v_grid_lqg = np.meshgrid(
-        np.linspace(min(lqg_theta_w_values), max(lqg_theta_w_values), 100),
-        np.linspace(min(lqg_theta_v_values), max(lqg_theta_v_values), 100)
-    )
-    cost_grid_lqg = griddata(
-        (lqg_theta_w_values, lqg_theta_v_values), lqg_cost_values,
-        (theta_w_grid_lqg, theta_v_grid_lqg), method='cubic'
-    )
 
-
-    # Plot smooth surface - LQG
-    surface_lqg =ax.plot_surface(theta_w_grid_lqg, theta_v_grid_lqg, cost_grid_lqg, alpha=0.5, color='red', label='LQG')
-    surfaces.append(surface_lqg)
-    labels.append('LQG')
-    #-------------------------
-    
-    # Repeat the process for WDRC
-    # Interpolate cost values for smooth surface - WDRC
-    theta_w_grid_wdrc, theta_v_grid_wdrc = np.meshgrid(
-    np.linspace(min(wdrc_theta_w_values), max(wdrc_theta_w_values), 100),
-    np.linspace(min(wdrc_theta_v_values), max(wdrc_theta_v_values), 100)
-    )
-    cost_grid_wdrc = griddata(
-        (wdrc_theta_w_values, wdrc_theta_v_values), wdrc_cost_values,
-        (theta_w_grid_wdrc, theta_v_grid_wdrc), method='linear'  # Use linear interpolation
-    )
-
-    
-
-    # Plot smooth surface - WDRC
-    surface_wdrc =ax.plot_surface(theta_w_grid_wdrc, theta_v_grid_wdrc, cost_grid_wdrc, alpha=0.6, color='blue', label='WDRC', antialiased=False)
-    surfaces.append(surface_wdrc)
-    labels.append('WDRC [3]')
-    #--------------
-    
-
-    # Interpolate cost values for smooth surface - DRKF
-    theta_w_grid_drce, theta_v_grid_drce = np.meshgrid(
-        np.linspace(min(drce_theta_w_values), max(drce_theta_w_values), 100),
-        np.linspace(min(drce_theta_v_values), max(drce_theta_v_values), 100)
-    )
-    cost_grid_drce = griddata(
-        (drce_theta_w_values, drce_theta_v_values), drce_cost_values,
-        (theta_w_grid_drce, theta_v_grid_drce), method='cubic'
-    )
-    
-    # Plot smooth surface - DCE
-    surface_drce = ax.plot_surface(theta_w_grid_drce, theta_v_grid_drce, cost_grid_drce, alpha=0.6, color='green', label='WDR-CE', antialiased=False)
-    surfaces.append(surface_drce)
-    labels.append('WDR-CE [Ours]')
-    
-    
-    ax.legend(handles=surfaces, labels=labels)
-    
-    # Set labels
-    ax.set_xlabel(r'$\theta_w$', fontsize=16)
-    ax.set_ylabel(r'$\theta_v$', fontsize=16)
-    ax.set_zlabel(r'Total Cost', fontsize=16, rotation=90, labelpad=3)
-    
-    ax.view_init(elev=15, azim=40)
-    ax.zaxis.set_rotate_label(False)
-    a = ax.zaxis.label.get_rotation()
-    if a<180:
-        a += 0
-    ax.zaxis.label.set_rotation(a)
-    a = ax.zaxis.label.get_rotation()
-    ax.set_zlabel(r'Total Cost', fontsize=16, labelpad=3)
-    plt.show()
-    fig.savefig(path + 'params_{}_{}_21.pdf'.format(dist, noise_dist), dpi=300, bbox_inches="tight", pad_inches=0.3)
-    #plt.clf()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -191,7 +106,7 @@ if __name__ == "__main__":
     parser.add_argument('--infinite', required=False, action="store_true") #infinite horizon settings if flagged
     parser.add_argument('--use_lambda', required=False, action="store_true") #use lambda results if flagged
     args = parser.parse_args()
-    
+    args.use_lambda = True
     if args.use_lambda:
         path = "./results/{}_{}/finite/multiple/params_lambda/s21/".format(args.dist, args.noise_dist)
     else:
@@ -329,6 +244,4 @@ if __name__ == "__main__":
     
     if args.use_lambda:
         summarize_lambda(lqg_lambda_values, lqg_theta_v_values, lqg_cost_values ,wdrc_lambda_values, wdrc_theta_v_values, wdrc_cost_values , drce_lambda_values, drce_theta_v_values, drce_cost_values, args.dist, args.noise_dist, args.infinite, args.use_lambda, path)
-    else:
-        summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,wdrc_theta_w_values, wdrc_theta_v_values, wdrc_cost_values , drce_theta_w_values, drce_theta_v_values, drce_cost_values, args.dist, args.noise_dist, args.infinite, args.use_lambda, path)
-
+   
