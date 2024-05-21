@@ -110,7 +110,7 @@ def summarize_lambda(wdrc_drkf_lambda_values, wdrc_drkf_theta_v_values, wdrc_drk
     fig.savefig(path + 'params_{}_{}_9.pdf'.format(dist, noise_dist), dpi=300, bbox_inches="tight", pad_inches=0.3)
     #plt.clf()
     
-def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,wdrc_theta_w_values, wdrc_theta_v_values, wdrc_cost_values , drce_theta_w_values, drce_theta_v_values, drce_cost_values, drcmmse_theta_w_values, drcmmse_theta_v_values, drcmmse_cost_values, dist, noise_dist, infinite, use_lambda, path):
+def summarize_theta_w(wdrc_drkf_theta_w_values, wdrc_drkf_theta_v_values, wdrc_drkf_cost_values  ,wdrc_theta_w_values, wdrc_theta_v_values, wdrc_cost_values , drce_theta_w_values, drce_theta_v_values, drce_cost_values, drcmmse_theta_w_values, drcmmse_theta_v_values, drcmmse_cost_values, dist, noise_dist, infinite, use_lambda, path):
     
     surfaces = []
     labels = []
@@ -125,14 +125,14 @@ def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,w
     # -------------------
     # LQG
     # Interpolate cost values for smooth surface - LQG
-    theta_w_grid_lqg, theta_v_grid_lqg = np.meshgrid(
-        np.linspace(min(lqg_theta_w_values), max(lqg_theta_w_values), 100),
-        np.linspace(min(lqg_theta_v_values), max(lqg_theta_v_values), 100)
-    )
-    cost_grid_lqg = griddata(
-        (lqg_theta_w_values, lqg_theta_v_values), lqg_cost_values,
-        (theta_w_grid_lqg, theta_v_grid_lqg), method='cubic'
-    )
+    # theta_w_grid_lqg, theta_v_grid_lqg = np.meshgrid(
+    #     np.linspace(min(lqg_theta_w_values), max(lqg_theta_w_values), 100),
+    #     np.linspace(min(lqg_theta_v_values), max(lqg_theta_v_values), 100)
+    # )
+    # cost_grid_lqg = griddata(
+    #     (lqg_theta_w_values, lqg_theta_v_values), lqg_cost_values,
+    #     (theta_w_grid_lqg, theta_v_grid_lqg), method='cubic'
+    # )
 
     # Plot data points - LQG
     #ax.scatter(lqg_lambda_values, lqg_theta_values, lqg_cost_values, label='LQG')
@@ -158,9 +158,24 @@ def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,w
     #ax.scatter(wdrc_lambda_values, wdrc_theta_values, wdrc_cost_values, label='WDRC')
 
     # Plot smooth surface - WDRC
-    surface_wdrc =ax.plot_surface(theta_w_grid_wdrc, theta_v_grid_wdrc, cost_grid_wdrc, alpha=0.7, color='blue', label='WDRC+MMSE')
+    surface_wdrc =ax.plot_surface(theta_w_grid_wdrc, theta_v_grid_wdrc, cost_grid_wdrc, alpha=0.7, color='blue', label='WDRC[]')
     surfaces.append(surface_wdrc)
-    labels.append('WDRC')
+    labels.append('WDRC []')
+    #--------------
+    # Interpolate cost values for smooth surface - DRKF
+    theta_w_grid_wdrc_drkf, theta_v_grid_wdrc_drkf = np.meshgrid(
+        np.linspace(min(wdrc_drkf_theta_w_values), max(wdrc_drkf_theta_w_values), 100),
+        np.linspace(min(wdrc_drkf_theta_v_values), max(wdrc_drkf_theta_v_values), 100)
+    )
+    cost_grid_wdrc_drkf = griddata(
+        (wdrc_drkf_theta_w_values, wdrc_drkf_theta_v_values), wdrc_drkf_cost_values,
+        (theta_w_grid_wdrc_drkf, theta_v_grid_wdrc_drkf), method='cubic'
+    )
+    
+    # Plot smooth surface - DCE
+    surface_wdrc_drkf = ax.plot_surface(theta_w_grid_wdrc_drkf, theta_v_grid_wdrc_drkf, cost_grid_wdrc_drkf, alpha=0.6, color='yellow', label='WDRC+DRKF []')
+    surfaces.append(surface_wdrc_drkf)
+    labels.append('WDRC-DRKF []')
     #--------------
 
     # Interpolate cost values for smooth surface - WDRCMMSE
@@ -176,7 +191,7 @@ def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,w
     # Plot smooth surface - DCE
     surface_drcmmse = ax.plot_surface(theta_w_grid_drcmmse, theta_v_grid_drcmmse, cost_grid_drcmmse, alpha=0.9, color='aqua', label='WDRC+DRMMSE')
     surfaces.append(surface_drcmmse)
-    labels.append('WDRC+DRMMSE')
+    labels.append('WDRC+DRMMSE []')
     
     #--------------
     # Plot DRKF data points
@@ -195,7 +210,7 @@ def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,w
     # Plot smooth surface - DCE
     surface_drce = ax.plot_surface(theta_w_grid_drce, theta_v_grid_drce, cost_grid_drce, alpha=0.6, color='green', label='WDR-CE')
     surfaces.append(surface_drce)
-    labels.append('WDR-CE')
+    labels.append('WDR-CE []')
     
     #---------------
     ax.legend(handles=surfaces, labels=labels)
@@ -207,7 +222,7 @@ def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,w
     ax.zaxis.set_rotate_label(False)
     a = ax.zaxis.label.get_rotation()
     if a<180:
-        a += 90
+        a += 0
     ax.zaxis.label.set_rotation(a)
     a = ax.zaxis.label.get_rotation()
     ax.set_zlabel(r'Total Cost', fontsize=16, labelpad=3)
@@ -266,8 +281,8 @@ if __name__ == "__main__":
     theta_v_list = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0] # radius of noise ambiguity set
     #theta_v_list = [0.5, 1.0, 2.0, 3.0, 4.0, 5.0]
     #theta_v_list = [1.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0]
-    theta_v_list = [2.0, 4.0, 6.0, 8.0, 10.0]
-    theta_w_list = [2.0, 4.0, 6.0, 8.0, 10.0]
+    theta_v_list = [0.1, 0.2, 0.5, 1.0]
+    theta_w_list = [0.1, 0.2, 0.5, 1.0]
     lambda_list = [5, 10, 15, 20, 25, 30] # disturbance distribution penalty parameter
     #lambda_list = [15, 20, 30, 35, 40, 50, 60]
     if args.dist=='normal':
@@ -285,7 +300,7 @@ if __name__ == "__main__":
     else:
         pattern_drcmmse = r"drcmmse_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?and_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?"
         pattern_drce = r"drce_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?and_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?"
-        pattern_wdrc_drkf = r"wdrc_drkf(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?and_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?"
+        pattern_wdrc_drkf = r"wdrc_drkf_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?and_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?"
         pattern_wdrc = r"wdrc_(\d+(?:\.\d+)?)_?(\d+(?:_\d+)?)?"
     #pattern_lqg = r"lqg.pkl"
     # Iterate over each file in the directory
@@ -367,6 +382,7 @@ if __name__ == "__main__":
                         theta_v_value += float(theta_v_str)/10
                         #changed _1_5_ to 1.5!
                         # Store theta_w and theta values
+                        
                         wdrc_drkf_theta_w_values.append(theta_w_value)
                         wdrc_drkf_theta_v_values.append(theta_v_value)
                     
@@ -426,6 +442,7 @@ if __name__ == "__main__":
     wdrc_drkf_theta_v_values = np.array(wdrc_drkf_theta_v_values)
     wdrc_drkf_cost_values = np.array(wdrc_drkf_cost_values)
     
+    #print("wdrcdrkf ", wdrc_drkf_theta_w_values)
     
     if args.use_lambda:
         summarize_lambda(wdrc_drkf_lambda_values, wdrc_drkf_theta_v_values, wdrc_drkf_cost_values ,wdrc_lambda_values, wdrc_theta_v_values, wdrc_cost_values , drce_lambda_values, drce_theta_v_values, drce_cost_values, drcmmse_lambda_values, drcmmse_theta_v_values, drcmmse_cost_values, args.dist, args.noise_dist, args.infinite, args.use_lambda, path)
