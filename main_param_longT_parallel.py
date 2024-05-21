@@ -115,22 +115,37 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     # You can change theta_v list and lambda_list ! but you also need to change lists at plot_params.py to get proper plot
     theta_v_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] #[1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
     theta_w_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set need to run 2.0 - 3, 4, 5, 6
-    #theta_v_list = [1.0, 2.0] #[1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
-    #theta_w_list = [1.0] # radius of noise ambiguity set need to run 2.0 - 3, 4, 5, 6
+    
     if dist=='normal':
         theta_x0 = 1.0 # radius of initial state ambiguity set
-        lambda_list = [7, 10, 15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
+        lambda_list = [10, 15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
     else:
         theta_x0 = 0.5
-        lambda_list = [7, 10, 15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
+        lambda_list = [10, 15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
     
     use_lambda = False # If use_lambda is True, we will use lambda_list. If use_lambda is False, we will use theta_w_list
-    use_optimal_lambda = False
+    use_optimal_lambda = True
     if use_lambda:
         dist_parameter_list = lambda_list
     else:
         dist_parameter_list = theta_w_list
-        
+    if dist=='normal':
+        # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
+        WDRC_lambda_file = open('./inputs/longT_nn/longT_wdrc_lambda.pkl', 'rb')
+        WDRC_lambda = pickle.load(WDRC_lambda_file)
+        WDRC_lambda_file.close()
+        DRCE_lambda_file = open('./inputs/longT_nn/longT_drce_lambda.pkl', 'rb')
+        DRCE_lambda = pickle.load(DRCE_lambda_file)
+        DRCE_lambda_file.close()
+    if dist=='quadratic':
+        # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
+        WDRC_lambda_file = open('./inputs/longT_qq/longT_wdrc_lambda.pkl', 'rb')
+        WDRC_lambda = pickle.load(WDRC_lambda_file)
+        WDRC_lambda_file.close()
+        DRCE_lambda_file = open('./inputs/longT_qq/longT_drce_lambda.pkl', 'rb')
+        DRCE_lambda = pickle.load(DRCE_lambda_file)
+        DRCE_lambda_file.close()
+            
     def perform_simulation(lambda_, noise_dist, dist_parameter, theta, idx_w, idx_v):
         for num_noise in num_noise_list:
             np.random.seed(seed) # fix Random seed!
@@ -176,17 +191,6 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                 x0_min = 0.0*np.ones(nx)
                 x0_mean = (0.5*(x0_max + x0_min))[..., np.newaxis]
                 x0_cov = 3.0/20.0 *np.diag((x0_max - x0_min)**2)
-            elif dist =="uniform":
-                #disturbance distribution parameters
-                w_max = 0.2*np.ones(nx)
-                w_min = -0.4*np.ones(nx)
-                mu_w = (0.5*(w_max + w_min))[..., np.newaxis]
-                Sigma_w = 1/12*np.diag((w_max - w_min)**2)
-                #initial state distribution parameters
-                x0_max = 0.5*np.ones(nx)
-                x0_min = 0.0*np.ones(nx)
-                x0_mean = (0.5*(x0_max + x0_min))[..., np.newaxis]
-                x0_cov = 1/12*np.diag((x0_max - x0_min)**2)
                 
             #-------Noise distribution ---------#
             if noise_dist =="normal":
@@ -199,11 +203,6 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                 v_max = 2.0*np.ones(ny)
                 mu_v = (0.5*(v_max + v_min))[..., np.newaxis]
                 M = 3.0/20.0 *np.diag((v_max-v_min)**2) #observation noise covariance
-            elif noise_dist == "uniform":
-                v_min = -2.0*np.ones(ny)
-                v_max = 6.0*np.ones(ny)
-                mu_v = (0.5*(v_max + v_min))[..., np.newaxis]
-                M = 1/12*np.diag((v_max - v_min)**2) #observation noise covariance
                 
                 
             #-------Estimate the nominal distribution-------
@@ -226,10 +225,10 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
             output_drce_list = []
             
             #Initialize controllers
-            if use_lambda:
+            if use_optimal_lambda == True:
                 lambda_ = WDRC_lambda[idx_w][idx_v]
             wdrc = WDRC(lambda_, theta_w, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat, M_hat, x0_mean_hat[0], x0_cov_hat[0], use_lambda, use_optimal_lambda)
-            if use_lambda:
+            if use_optimal_lambda == True:
                 lambda_ = DRCE_lambda[idx_w][idx_v]
             drce = DRCE(lambda_, theta_w, theta, theta_x0, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat,  M_hat, x0_mean_hat[0], x0_cov_hat[0], use_lambda, use_optimal_lambda)
             lqg = LQG(T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat, M_hat , x0_mean_hat[0], x0_cov_hat[0])
@@ -239,10 +238,10 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
             lqg.backward()
             
             # Save the optimzed lambda
-            save_data(path + 'longT_wdrc_lambda_'+str(idx_w)+'and'+str(idx_v)+'.pkl',wdrc.lambda_)
-            save_data(path + 'longT_drce_lambda_'+str(idx_w)+'and'+str(idx_v)+'.pkl',drce.lambda_)
-            WDRC_lambda[idx_w][idx_v] = wdrc.lambda_
-            DRCE_lambda[idx_w][idx_v] = drce.lambda_
+            #save_data(path + 'longT_wdrc_lambda_'+str(idx_w)+'and'+str(idx_v)+'.pkl',wdrc.lambda_)
+            #save_data(path + 'longT_drce_lambda_'+str(idx_w)+'and'+str(idx_v)+'.pkl',drce.lambda_)
+            #WDRC_lambda[idx_w][idx_v] = wdrc.lambda_
+            #DRCE_lambda[idx_w][idx_v] = drce.lambda_
                 
             print('---------------------')
             
@@ -334,14 +333,6 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     for dist_parameter, theta, idx_w, idx_v in combinations
                 )
     
-    
-    # if use_lambda:
-    #     path = "./results/{}_{}/finite/multiple/params_lambda/longT/".format(dist, noise_dist)
-    # else:
-    #     path = "./results/{}_{}/finite/multiple/params_thetas/longT/".format(dist, noise_dist)
-        
-    # if not os.path.exists(path):
-    #     os.makedirs(path)                
     
     
     print("Params data generation Completed !")

@@ -85,7 +85,7 @@ python plot_params4_F.py --dist quadratic --noise_dist quadratic
 ### Figure 4 (a)
 First, generate the Total Cost data using
 ```
-python main_param_longT.py
+python main_param_longT_parallel.py
 ```
 After data generation, plot the results using
 ```
@@ -95,7 +95,7 @@ python plot_params_long.py
 ### Figure 4 (b)
 First, generate the Total Cost data using
 ```
-python main_param_longT.py --dist quadratic --noise_dist quadratic
+python main_param_longT_parallel.py --dist quadratic --noise_dist quadratic
 ```
 After data generation, plot the results using
 ```
