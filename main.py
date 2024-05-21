@@ -33,11 +33,11 @@ def main():
                 
                 
                 # Load Lambda
-                WDRC_lambda_file = open('./results/NN_longT_tmp/longT_wdrc_lambda_{}and{}.pkl'.format(idx_w,idx_v), 'rb')
+                WDRC_lambda_file = open('./results/QQ_longT_tmp/longT_wdrc_lambda_{}and{}.pkl'.format(idx_w,idx_v), 'rb')
                 WDRC_lambda_ = pickle.load(WDRC_lambda_file)
                 WDRC_lambda_file.close()
                 # Load Lambda
-                DRCE_lambda_file = open('./results/NN_longT_tmp/longT_drce_lambda_{}and{}.pkl'.format(idx_w,idx_v), 'rb')
+                DRCE_lambda_file = open('./results/QQ_longT_tmp/longT_drce_lambda_{}and{}.pkl'.format(idx_w,idx_v), 'rb')
                 DRCE_lambda_ = pickle.load(DRCE_lambda_file)
                 DRCE_lambda_file.close()
                 
@@ -47,8 +47,8 @@ def main():
                 
                 
                     
-    save_data('./results/NN_longT_tmp/longT_WDRC_lambda.pkl',WDRC_lambda)
-    save_data('./results/NN_longT_tmp/longT_DRCE_lambda.pkl',DRCE_lambda)
+    save_data('./results/QQ_longT_tmp/longT_WDRC_lambda.pkl',WDRC_lambda)
+    save_data('./results/QQ_longT_tmp/longT_DRCE_lambda.pkl',DRCE_lambda)
     
     print(WDRC_lambda)
     print(DRCE_lambda)
