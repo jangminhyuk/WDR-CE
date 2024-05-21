@@ -145,9 +145,9 @@ python plot_params_21.py --dist quadratic --noise_dist quadratic
 ### Figure 7 (a)
 First, generate the data using
 ```
-
+python main_OS_parallel.py
 ```
-After data generation, plot the results using
+After data generation, plot Figure 7 (a) using
 ```
 
 ```
