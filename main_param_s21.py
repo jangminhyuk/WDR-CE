@@ -176,8 +176,26 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
         dist_parameter_list = lambda_list
     else:
         dist_parameter_list = theta_w_list
-        
+    
+    if dist=='normal':
+        # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
+        WDRC_lambda_file = open('./inputs/nx=21_nn/nx21_wdrc_lambda.pkl', 'rb')
+        WDRC_lambda = pickle.load(WDRC_lambda_file)
+        WDRC_lambda_file.close()
+        DRCE_lambda_file = open('./inputs/nx=21_nn/nx21_drce_lambda.pkl', 'rb')
+        DRCE_lambda = pickle.load(DRCE_lambda_file)
+        DRCE_lambda_file.close()
+    if dist=='quadratic':
+        # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
+        WDRC_lambda_file = open('./inputs/nx=21_qq/nx21_wdrc_lambda.pkl', 'rb')
+        WDRC_lambda = pickle.load(WDRC_lambda_file)
+        WDRC_lambda_file.close()
+        DRCE_lambda_file = open('./inputs/nx=21_qq/nx21_drce_lambda.pkl', 'rb')
+        DRCE_lambda = pickle.load(DRCE_lambda_file)
+        DRCE_lambda_file.close()
     # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
+    print(WDRC_lambda)
+    
     WDRC_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
     DRCE_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
     for noise_dist in noisedist:

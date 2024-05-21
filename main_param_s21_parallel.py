@@ -354,9 +354,8 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                 
             save_data(path + 'lqg.pkl', J_LQG_mean)
             
-            save_data(path + 'nx21_wdrc_lambda.pkl',WDRC_lambda)
-            save_data(path + 'nx21_drce_lambda.pkl',DRCE_lambda)
-    
+            save_data(path + 'nx21_wdrc_lambda_'+idx_w+'_'+idx_v+'.pkl',WDRC_lambda)
+            save_data(path + 'nx21_drce_lambda_'+idx_w+'_'+idx_v+'.pkl',DRCE_lambda)
             #Summarize and plot the results
             print('\n-------Summary-------')
             print("dist : ", dist,"/ noise dist : ", noise_dist, "/ num_samples : ", num_samples, "/ num_noise_samples : ", num_noise, "/seed : ", seed)
