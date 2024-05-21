@@ -89,7 +89,9 @@ def save_data(path, data):
     output = open(path, 'wb')
     pickle.dump(data, output)
     output.close()
-
+# Uncomment Below 2 lines to save optimal lambda, using your own distributions.
+WDRC_lambda = np.zeros((10,10))
+DRCE_lambda = np.zeros((10,10))
 def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     
     lambda_ = 10
@@ -113,7 +115,8 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     # You can change theta_v list and lambda_list ! but you also need to change lists at plot_params.py to get proper plot
     theta_v_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] #[1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
     theta_w_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set need to run 2.0 - 3, 4, 5, 6
-    
+    theta_v_list = [0.1, 1.0] #[1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
+    theta_w_list = [0.1, 1.0] # radius of noise ambiguity set need to run 2.0 - 3, 4, 5, 6
     if dist=='normal':
         theta_x0 = 1.0 # radius of initial state ambiguity set
         lambda_list = [7, 10, 15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
@@ -136,9 +139,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     # DRCE_lambda = pickle.load(DRCE_lambda_file)
     # DRCE_lambda_file.close()
     
-    # Uncomment Below 2 lines to save optimal lambda, using your own distributions.
-    WDRC_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
-    DRCE_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
+    
     
     def perform_simulation(lambda_, noise_dist, dist_parameter, theta, idx_w, idx_v):
         for num_noise in num_noise_list:
