@@ -106,7 +106,7 @@ if __name__ == "__main__":
     parser.add_argument('--infinite', required=False, action="store_true") #infinite horizon settings if flagged
     parser.add_argument('--use_lambda', required=False, action="store_true") #use lambda results if flagged
     args = parser.parse_args()
-    args.use_lambda == True
+    args.use_lambda = True
     if args.use_lambda:
         path = "./results/{}_{}/finite/multiple/params_lambda/s21/".format(args.dist, args.noise_dist)
     else:

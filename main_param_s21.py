@@ -178,8 +178,8 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
         dist_parameter_list = theta_w_list
         
     # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
-    WDRC_lambda = np.zeros((6,6))
-    DRCE_lambda = np.zeros((6,6))
+    WDRC_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
+    DRCE_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
     for noise_dist in noisedist:
         for idx_w, dist_parameter in enumerate(dist_parameter_list):
             for idx_v, theta in enumerate(theta_v_list):
@@ -269,8 +269,8 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     drce.backward()
                     lqg.backward()
                     # Save the optimzed lambda
-                    WDRC_lambda[idx_w][idx_v] = wdrc.lambda_
-                    DRCE_lambda[idx_w][idx_v] = drce.lambda_
+                    #WDRC_lambda[idx_w][idx_v] = wdrc.lambda_
+                    #DRCE_lambda[idx_w][idx_v] = drce.lambda_
                     print('---------------------')
                     
                     #----------------------------
@@ -357,10 +357,10 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     print("Params data generation Completed !")
     print("Please make sure your lambda_list(or theta_w_list) and theta_v_list in plot_params_21.py is as desired")
     
-    if use_lambda:
-        print("Now use : python plot_params_21.py --use_lambda --dist "+ dist + " --noise_dist " + noise_dist)
-    else:
-        print("Now use : python plot_params_21.py --dist "+ dist + " --noise_dist " + noise_dist)
+    # if use_lambda:
+    #     print("Now use : python plot_params_21.py --use_lambda --dist "+ dist + " --noise_dist " + noise_dist)
+    # else:
+    print("Now use : python plot_params_21.py --dist "+ dist + " --noise_dist " + noise_dist)
     
             
 
