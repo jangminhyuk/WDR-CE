@@ -117,8 +117,8 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     # You can change theta_v list and lambda_list ! but you also need to change lists at plot_params4_drlqc_nonzeromean.py to get proper plot
     
     if dist=='normal':
-        theta_v_list = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
-        theta_w_list = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
+        theta_v_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
+        theta_w_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
     else:
         theta_v_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0] # radius of noise ambiguity set
         theta_w_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
@@ -126,12 +126,12 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     num_x0_samples = 15 #  N_x0 
     theta_x0 = 2.0 # radius of initial state ambiguity set
     use_lambda = False # If use_lambda=True, we will use lambda_list. If use_lambda=False, we will use theta_w_list
-    use_optimal_lambda = False
+    use_optimal_lambda = True
     if use_lambda:
         dist_parameter_list = lambda_list
     else:
         dist_parameter_list = theta_w_list
-        
+    
     # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
     WDRC_lambda_file = open('./inputs/nonzero_qq/nonzero_wdrc_lambda.pkl', 'rb')
     WDRC_lambda = pickle.load(WDRC_lambda_file)
@@ -141,8 +141,9 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     DRCE_lambda_file.close()
     
     # Uncomment Below 2 lines to save optimal lambda, using your own distributions.
-    WDRC_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
-    DRCE_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
+    # WDRC_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
+    # DRCE_lambda = np.zeros((len(theta_w_list),len(theta_v_list)))
+    print(WDRC_lambda.shape)
     for noise_dist in noisedist:
         for idx_w, dist_parameter in enumerate(dist_parameter_list):
             for idx_v, theta in enumerate(theta_v_list):
@@ -236,7 +237,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     drlqc = DRLQC(theta_w, theta, theta_x0, T, dist, noise_dist, system_data, mu_hat, W_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat, V_hat, x0_mean_hat[0], x0_cov_hat[0], tol)
                     if use_optimal_lambda == True:
                         lambda_ = WDRC_lambda[idx_w][idx_v]
-                    print(lambda_)
+                    #print(lambda_)
                     wdrc = WDRC(lambda_, theta_w, T, dist, noise_dist, system_data, mu_hat, Sigma_hat, x0_mean, x0_cov, x0_max, x0_min, mu_w, Sigma_w, w_max, w_min, v_max, v_min, mu_v, v_mean_hat, M_hat, x0_mean_hat[0], x0_cov_hat[0], use_lambda, use_optimal_lambda)
                     if use_optimal_lambda == True:
                         lambda_ = DRCE_lambda[idx_w][idx_v]

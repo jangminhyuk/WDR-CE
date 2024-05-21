@@ -141,4 +141,13 @@ After data generation, plot the results using
 ```
 python plot_params_21.py --dist quadratic --noise_dist quadratic
 ```
+---
+### Figure 7 (a)
+First, generate the data using
+```
 
+```
+After data generation, plot the results using
+```
+
+```

@@ -126,36 +126,19 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     #---------------------
     # You can change theta_v list and lambda_list ! but you also need to change lists at plot_params4_F.py to get proper plot
 
-    theta_v_list = [0.1, 1.0, 2.0, 4.0, 6.0, 8.0, 10.0] # radius of noise ambiguity set
-    theta_w_list = [0.1, 1.0, 2.0, 4.0, 6.0, 8.0, 10.0] # radius of noise ambiguity set
+    theta_v_list = [2.0, 4.0, 6.0, 8.0, 10.0] # radius of noise ambiguity set
+    theta_w_list = [2.0, 4.0, 6.0, 8.0, 10.0] # radius of noise ambiguity set
     lambda_list = [10, 20, 30, 40, 50] # disturbance distribution penalty parameter
 
     theta_x0 = 5.0 # radius of initial state ambiguity set  
-    use_lambda = False # If use_lambda is True, we will use lambda_list. If use_lambda is False, we will use theta_w_list
+    use_lambda = True # If use_lambda is True, we will use lambda_list. If use_lambda is False, we will use theta_w_list
     use_optimal_lambda = False
     if use_lambda:
         dist_parameter_list = lambda_list
     else:
         dist_parameter_list = theta_w_list
     
-    # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
-    # if dist=="normal":
-    #     # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
-    #     WDRC_lambda_file = open('./inputs/zero_nn/zero_wdrc_lambda.pkl', 'rb')
-    #     WDRC_lambda = pickle.load(WDRC_lambda_file)
-    #     WDRC_lambda_file.close()
-    #     DRCE_lambda_file = open('./inputs/zero_nn/zero_drce_lambda.pkl', 'rb')
-    #     DRCE_lambda = pickle.load(DRCE_lambda_file)
-    #     DRCE_lambda_file.close()
-    # else:
-    #     # Lambda list (from the given theta_w, WDRC and WDR-CE calcluates optimized lambda)
-    #     WDRC_lambda_file = open('./inputs/zero_qq/zero_wdrc_lambda.pkl', 'rb')
-    #     WDRC_lambda = pickle.load(WDRC_lambda_file)
-    #     WDRC_lambda_file.close()
-    #     DRCE_lambda_file = open('./inputs/zero_qq/zero_drce_lambda.pkl', 'rb')
-    #     DRCE_lambda = pickle.load(DRCE_lambda_file)
-    #     DRCE_lambda_file.close()
-    # # Uncomment Below 4 lines to save optimal lambda, using your own distributions.
+    
     
     WDRC_lambda = np.zeros((9,9))
     WDRC_DRKF_lambda = np.zeros((9,9))
@@ -268,7 +251,11 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     drce.backward()
                         
                     print('---------------------')
-                    
+                    # Save the optimzed lambda
+                    WDRC_lambda[idx_w][idx_v] = wdrc.lambda_
+                    DRCE_lambda[idx_w][idx_v] = drce.lambda_
+                    WDRC_DRKF_lambda[idx_w][idx_v] = wdrcdrkf.lambda_
+                    WDRC_DRMMSE_lambda[idx_w][idx_v] = drcmmse.lambda_
 
                     
                     #----------------------------

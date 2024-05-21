@@ -58,7 +58,7 @@ def summarize_lambda(lqg_lambda_values, lqg_theta_v_values, lqg_cost_values ,wdr
     # Plot smooth surface - WDRC
     surface_wdrc =ax.plot_surface(lambda_grid_wdrc, theta_v_grid_wdrc, cost_grid_wdrc, alpha=0.6, color='blue', label='WDRC')
     surfaces.append(surface_wdrc)
-    labels.append('WDRC [3]')
+    labels.append('WDRC [49]')
     #--------------
     
     # Interpolate cost values for smooth surface - DRKF
@@ -141,7 +141,7 @@ def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,w
     # Plot smooth surface - WDRC
     surface_wdrc =ax.plot_surface(theta_w_grid_wdrc, theta_v_grid_wdrc, cost_grid_wdrc, alpha=0.6, color='blue', label='WDRC', antialiased=False)
     surfaces.append(surface_wdrc)
-    labels.append('WDRC [3]')
+    labels.append('WDRC [49]')
     #--------------
 
     # Interpolate cost values for smooth surface - DRKF
@@ -218,8 +218,8 @@ if __name__ == "__main__":
     
     # Modify the theta_v_list and lambda_list(theta_w_list) below to match your experiments (Just in case you modified the code)!!! 
     
-    theta_v_list = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
-    theta_w_list = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
+    theta_v_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
+    theta_w_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
     
     if args.dist=='normal':
         lambda_list = [7, 10, 15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
