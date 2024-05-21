@@ -327,8 +327,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                 
             save_data(path + 'lqg.pkl', J_LQG_mean)
 
-            save_data(path + 'longT_wdrc_lambda.pkl',WDRC_lambda)
-            save_data(path + 'longT_drce_lambda.pkl',DRCE_lambda)
+            
             
             #Summarize and plot the results
             print('\n-------Summary-------')
@@ -341,13 +340,19 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     delayed(perform_simulation)(lambda_, noise_dist, dist_parameter, theta, idx_w, idx_v)
                     for dist_parameter, theta, idx_w, idx_v in combinations
                 )
-    # for noise_dist in noisedist:
-    #     for dist_parameter, theta, idx_w, idx_v in combinations:
-    #         perform_simulation(lambda_, noise_dist, dist_parameter, theta, idx_w, idx_v)
-                    
-
+    
+    
+    if use_lambda:
+        path = "./results/{}_{}/finite/multiple/params_lambda/longT/".format(dist, noise_dist)
+    else:
+        path = "./results/{}_{}/finite/multiple/params_thetas/longT/".format(dist, noise_dist)
+        
+    if not os.path.exists(path):
+        os.makedirs(path)                
+    save_data(path + 'longT_wdrc_lambda.pkl',WDRC_lambda)
+    save_data(path + 'longT_drce_lambda.pkl',DRCE_lambda)
+    
     print("Params data generation Completed !")
-    print("Please make sure your lambda_list(or theta_w_list) and theta_v_list in plot_parms.py is as desired")
     
     if use_lambda:
         print("Now use : python plot_params_long.py --use_lambda --dist "+ dist + " --noise_dist " + noise_dist)
