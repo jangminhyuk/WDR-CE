@@ -115,8 +115,8 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     # You can change theta_v list and lambda_list ! but you also need to change lists at plot_params.py to get proper plot
     theta_v_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] #[1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
     theta_w_list = [0.1, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set need to run 2.0 - 3, 4, 5, 6
-    theta_v_list = [1.0] #[1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
-    theta_w_list = [1.0] # radius of noise ambiguity set need to run 2.0 - 3, 4, 5, 6
+    #theta_v_list = [1.0] #[1.0, 2.0, 3.0, 4.0, 5.0, 6.0] # radius of noise ambiguity set
+    #theta_w_list = [1.0] # radius of noise ambiguity set need to run 2.0 - 3, 4, 5, 6
     if dist=='normal':
         theta_x0 = 1.0 # radius of initial state ambiguity set
         lambda_list = [7, 10, 15, 20, 25, 30, 35, 40, 45, 50] # disturbance distribution penalty parameter
@@ -239,6 +239,8 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
             lqg.backward()
             
             # Save the optimzed lambda
+            save_data(path + 'longT_wdrc_lambda_'+idx_w+'_'+idx_v+'.pkl',wdrc.lambda_)
+            save_data(path + 'longT_drce_lambda_'+idx_w+'_'+idx_v+'.pkl',drce.lambda_)
             WDRC_lambda[idx_w][idx_v] = wdrc.lambda_
             DRCE_lambda[idx_w][idx_v] = drce.lambda_
                 
@@ -318,8 +320,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                 
             save_data(path + 'lqg.pkl', J_LQG_mean)
 
-            save_data(path + 'longT_wdrc_lambda_'+idx_w+'_'+idx_v+'.pkl',WDRC_lambda)
-            save_data(path + 'longT_drce_lambda_'+idx_w+'_'+idx_v+'.pkl',DRCE_lambda)
+            
             
             #Summarize and plot the results
             print('\n-------Summary-------')
