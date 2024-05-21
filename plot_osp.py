@@ -7,18 +7,14 @@ import matplotlib.pyplot as plt
 import argparse
 import pickle
 
-def summarize_theta_w(J_DRCE_mean_all_samp, J_DRCE_std_all_samp, J_WDRC_mean_all_samp, J_WDRC_std_all_samp, J_LQG_mean_all_samp, J_LQG_std_all_samp, DRCE_prob_all_samp, theta_list, num_noise_list):
+def summarize_theta_w(J_DRCE_mean_all_samp, J_DRCE_std_all_samp, DRCE_prob_all_samp, theta_list, num_noise_list):
     fig = plt.figure(figsize=(6,4), dpi=300)
     
     colors = ['tab:blue', 'tab:orange', 'tab:green']
     for i, num_noise in enumerate(num_noise_list):
         plt.plot(theta_list, J_DRCE_mean_all_samp[i], color=colors[i], marker='.', markersize=7, label=rf'$N={num_noise}$')
         plt.fill_between(theta_list, J_DRCE_mean_all_samp[i] + 0.25*J_DRCE_std_all_samp[i], J_DRCE_mean_all_samp[i] - 0.25*J_DRCE_std_all_samp[i], facecolor=colors[i], alpha=0.3)
-        # plt.plot(theta_list, J_WDRC_mean_all_samp[i], color=colors[i], linestyle='--', marker='.', markersize=7, label=f'WDRC (N={num_noise})')
-        # plt.fill_between(theta_list, J_WDRC_mean_all_samp[i] + 0.25*J_WDRC_std_all_samp[i], J_WDRC_mean_all_samp[i] - 0.25*J_WDRC_std_all_samp[i], facecolor=colors[i], alpha=0.3)
-        # plt.plot(theta_list, J_LQG_mean_all_samp[i], color=colors[i], linestyle=':', marker='.', markersize=7, label=f'LQG (N={num_noise})')
-        # plt.fill_between(theta_list, J_LQG_mean_all_samp[i] + 0.25*J_WDRC_std_all_samp[i], J_LQG_mean_all_samp[i] - 0.25*J_LQG_std_all_samp[i], facecolor=colors[i], alpha=0.3)
-      
+        
     #plt.xscale('log')
     #plt.yscale('log')
     plt.xlabel(r'$\theta$', fontsize=16)
@@ -52,8 +48,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--dist', required=False, default="normal", type=str) #disurbance distribution (normal or uniform or quadratic)
     parser.add_argument('--noise_dist', required=False, default="normal", type=str) #noise distribution (normal or uniform or quadratic)
-    parser.add_argument('--infinite', required=False, action="store_true") #infinite horizon settings if flagged
-    parser.add_argument('--use_lambda', required=False, action="store_true") #use lambda results if flagged
     args = parser.parse_args()
     
     theta_list = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0] # radius of noise ambiguity set
@@ -64,27 +58,16 @@ if __name__ == "__main__":
     
     J_DRCE_mean_all_samp = []
     J_DRCE_std_all_samp = []
-    J_WDRC_mean_all_samp = []
-    J_WDRC_std_all_samp = []
-    J_LQG_mean_all_samp = []
-    J_LQG_std_all_samp = []
     DRCE_prob_all_samp = []
             
     for noise_dist in noisedist:
         for idx, num_noise in enumerate(num_noise_list):
             J_DRCE_mean_samp = []
             J_DRCE_std_samp = []
-            J_WDRC_mean_samp = []
-            J_WDRC_std_samp = []
-            J_LQG_mean_samp = []
-            J_LQG_std_samp = []
             DRCE_prob_samp = []
             
             for theta in theta_list:
-                if args.infinite:
-                    path = "./results/{}_{}/infinite/multiple/OS/".format(args.dist, args.noise_dist)
-                else:
-                    path = "./results/{}_{}/finite/multiple/OS/".format(args.dist, args.noise_dist)
+                path = "./results/{}_{}/finite/multiple/OS/".format(args.dist, args.noise_dist)
 
                 theta_v_ = f"_{str(theta).replace('.', '_')}" # change 1.0 to 1_0 for file name
                 theta_w_ = f"_{str(theta).replace('.', '_')}" # change 1.0 to 1_0 for file name
@@ -99,44 +82,20 @@ if __name__ == "__main__":
                 output_DRCE_prob = pickle.load(drce_file)
                 drce_file.close()
                 
-                wdrc_file = open(path + 'N=' + str(num_noise) + '/wdrc_mean_os_' + theta_w_ + '.pkl', 'rb')
-                output_J_WDRC_mean = pickle.load(wdrc_file)
-                wdrc_file.close()
-                wdrc_file = open(path + 'N=' + str(num_noise) + '/wdrc_std_os_' + theta_w_ + '.pkl', 'rb')
-                output_J_WDRC_std = pickle.load(wdrc_file)
-                wdrc_file.close()
-                
-                lqg_file = open(path  + 'N=' + str(num_noise) + '/lqg_mean_os.pkl', 'rb')
-                output_J_LQG_mean = pickle.load(lqg_file)
-                lqg_file.close()
-                lqg_file = open(path  + 'N=' + str(num_noise) + '/lqg_std_os.pkl', 'rb')
-                output_J_LQG_std = pickle.load(lqg_file)
-                lqg_file.close()
                 
                 J_DRCE_mean_samp.append(output_J_DRCE_mean[-1])
                 J_DRCE_std_samp.append(output_J_DRCE_std[-1])
-                J_WDRC_mean_samp.append(output_J_WDRC_mean[-1])
-                J_WDRC_std_samp.append(output_J_WDRC_std[-1])
-                J_LQG_mean_samp.append(output_J_LQG_mean[-1])
-                J_LQG_std_samp.append(output_J_LQG_std[-1])
+                
                 DRCE_prob_samp.append(output_DRCE_prob[-1])
                 
             J_DRCE_mean_all_samp.append(J_DRCE_mean_samp)
             J_DRCE_std_all_samp.append(J_DRCE_std_samp)
-            J_WDRC_mean_all_samp.append(J_WDRC_mean_samp)
-            J_WDRC_std_all_samp.append(J_WDRC_std_samp)
-            J_LQG_mean_all_samp.append(J_LQG_mean_samp)
-            J_LQG_std_all_samp.append(J_LQG_std_samp)
             DRCE_prob_all_samp.append(DRCE_prob_samp)                
 
     
     J_DRCE_mean_all_samp = np.array(J_DRCE_mean_all_samp)
     J_DRCE_std_all_samp = np.array(J_DRCE_std_all_samp)
-    J_WDRC_mean_all_samp = np.array(J_WDRC_mean_all_samp)
-    J_WDRC_std_all_samp = np.array(J_WDRC_std_all_samp)
-    J_LQG_mean_all_samp = np.array(J_LQG_mean_all_samp)
-    J_LQG_std_all_samp = np.array(J_LQG_std_all_samp)
     DRCE_prob_all_samp = np.array(DRCE_prob_all_samp)
 
-    summarize_theta_w(J_DRCE_mean_all_samp, J_DRCE_std_all_samp, J_WDRC_mean_all_samp, J_WDRC_std_all_samp, J_LQG_mean_all_samp, J_LQG_std_all_samp, DRCE_prob_all_samp, theta_list, num_noise_list)
+    summarize_theta_w(J_DRCE_mean_all_samp, J_DRCE_std_all_samp, DRCE_prob_all_samp, theta_list, num_noise_list)
 

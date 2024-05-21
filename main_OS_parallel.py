@@ -131,8 +131,8 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     num_noise_list = [num_noise_samples]
     num_x0_samples = 15 # num x0 samples 
     
-    output_J_DRCE_mean=[], [], []
-    output_J_DRCE_std=[], [], []
+    output_J_DRCE_mean=[]
+    output_J_DRCE_std=[]
     output_DRCE_prob = []
     #-------Initialization-------
     nx = 10 #state dimension
@@ -278,7 +278,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                 
                     
                 
-                    J_DRCE_OS_list= [], [], []
+                    J_DRCE_OS_list= []
                     
                     
                     DRCE_prob = np.empty(num_sim)

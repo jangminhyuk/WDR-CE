@@ -99,7 +99,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     lambda_ = 10
     seed = 2024 # Random seed
     noisedist = [noise_dist1]
-    #noisedist = ["normal", "uniform", "quadratic"]
+    
     num_noise_list = [num_noise_samples]
     theta_w = 1.0 # will not be used for this file!!!
     num_x0_samples = 10 #  x0 samples
@@ -198,9 +198,9 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     
                     
                     if use_lambda:
-                        path = "./results/{}_{}/finite/multiple/params_lambda/".format(dist, noise_dist)
+                        path = "./results/{}_{}/finite/multiple/params_lambda/s21/".format(dist, noise_dist)
                     else:
-                        path = "./results/{}_{}/finite/multiple/params_thetas/".format(dist, noise_dist)
+                        path = "./results/{}_{}/finite/multiple/params_thetas/s21/".format(dist, noise_dist)
                         
                     if not os.path.exists(path):
                         os.makedirs(path)

@@ -149,5 +149,5 @@ python main_OS_parallel.py
 ```
 After data generation, plot Figure 7 (a) using
 ```
-
+python plot_osp.py
 ```
