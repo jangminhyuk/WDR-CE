@@ -361,12 +361,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
             print('\n-------Summary-------')
             print("dist : ", dist,"/ noise dist : ", noise_dist, "/ num_samples : ", num_samples, "/ num_noise_samples : ", num_noise, "/seed : ", seed)
             pass
-            
-    # for noise_dist in noisedist:
-    #     for idx_w, dist_parameter in enumerate(dist_parameter_list):
-    #         for idx_v, theta in enumerate(theta_v_list):
-    #             perform_simulation(lambda_, noise_dist, dist_parameter, theta, idx_w, idx_v)
-                
+    
     combinations = [(dist_parameter, theta, idx_w, idx_v) for idx_w, dist_parameter in enumerate(dist_parameter_list) for idx_v, theta in enumerate(theta_v_list)]
     for noise_dist in noisedist:
         results = Parallel(n_jobs=-1)(
