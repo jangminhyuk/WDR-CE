@@ -160,7 +160,18 @@ def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,w
     labels.append('WDR-CE [Ours]')
     
     
-    ax.legend(handles=surfaces, labels=labels)
+    #---------------
+    legend = fig.legend(
+    handles=surfaces,
+    labels=labels,
+    bbox_to_anchor=(0.8, 0.7),
+    loc='center right',
+    frameon=True,
+    framealpha=1.0,
+    facecolor='white'
+    )
+    legend.get_frame().set_alpha(1.0) 
+    legend.get_frame().set_facecolor('white')
     
     # Set labels
     ax.set_xlabel(r'$\theta_w$', fontsize=16)

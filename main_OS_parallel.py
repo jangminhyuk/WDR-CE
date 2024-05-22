@@ -149,14 +149,15 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     noisedist = [noise_dist1]
     
     
-    theta_w_list = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
-    theta_x0 = 0.5
+    theta_w_list = [0.05, 0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]
+    
     num_noise_list = [10, 15, 20] 
     
     for noise_dist in noisedist:
         for theta_w in theta_w_list:
                 WDRC_lambda, DRCE_lambda = [],[]
                 theta = theta_w
+                theta_x0=theta
                 #for theta in theta_v_list:
                 for idx, num_noise in enumerate(num_noise_list):
                     # Use N = N_w = N_v = N_x0
@@ -165,7 +166,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     theta_ = f"_{str(theta).replace('.', '_')}" # change 1.0 to 1_0 for file name
                     
                     # Load Lambda
-                    DRCE_lambda_file = open('./inputs/OS/N={}/drce_lambda_{}.pkl'.format(num_noise,theta_), 'rb')
+                    DRCE_lambda_file = open('./inputs/OutOfSample/N={}/drce_lambda_{}.pkl'.format(num_noise,theta_), 'rb')
                     DRCE_lambda = pickle.load(DRCE_lambda_file)
                     DRCE_lambda_file.close()
                     
