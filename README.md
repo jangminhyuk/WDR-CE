@@ -107,7 +107,7 @@ First, generate the data using
 ```
 python main_OS_parallel.py
 ```
-After data generation, plot Figure 5 (a), (b) using
+After data generation, plot Figure (a), (b) using
 ```
 python plot_osp.py
 ```
@@ -150,14 +150,4 @@ python main_param_s21.py --dist quadratic --noise_dist quadratic
 After data generation, plot the results using
 ```
 python plot_params_21.py --dist quadratic --noise_dist quadratic
-```
----
-### Figure 7 (a) (b)
-First, generate the data using
-```
-python main_OS_parallel.py
-```
-After data generation, plot Figure 5 (a), (b) using
-```
-python plot_osp.py
 ```
