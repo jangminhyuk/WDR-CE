@@ -41,22 +41,7 @@ def summarize_lambda(wdrc_drkf_lambda_values, wdrc_drkf_theta_v_values, wdrc_drk
     # Plot smooth surface - WDRC
     surface_wdrc =ax.plot_surface(lambda_grid_wdrc, theta_v_grid_wdrc, cost_grid_wdrc, alpha=0.5, color='blue', label='WDRC')
     surfaces.append(surface_wdrc)
-    labels.append('WDRC [3]')
-    #--------------
-    # Interpolate cost values for smooth surface - WDRC DRKF
-    lambda_grid_wdrc_drkf, theta_v_grid_wdrc_drkf = np.meshgrid(
-        np.linspace(min(wdrc_drkf_lambda_values), max(wdrc_drkf_lambda_values), 100),
-        np.linspace(min(wdrc_drkf_theta_v_values), max(wdrc_drkf_theta_v_values), 100)
-    )
-    cost_grid_wdrc_drkf = griddata(
-        (wdrc_drkf_lambda_values, wdrc_drkf_theta_v_values), wdrc_drkf_cost_values,
-        (lambda_grid_wdrc_drkf, theta_v_grid_wdrc_drkf), method='cubic'
-    )
-    
-    # Plot smooth surface - DCE
-    surface_wdrc_drkf = ax.plot_surface(lambda_grid_wdrc_drkf, theta_v_grid_wdrc_drkf, cost_grid_wdrc_drkf, alpha=0.4, color='red', label='WDRC+DRKF')
-    surfaces.append(surface_wdrc_drkf)
-    labels.append('WDRC + DRKF [54]')
+    labels.append('WDRC [7]')
     #--------------
     # Interpolate cost values for smooth surface - DRCMMSE
     lambda_grid_drcmmse, theta_v_grid_drcmmse = np.meshgrid(
@@ -71,7 +56,23 @@ def summarize_lambda(wdrc_drkf_lambda_values, wdrc_drkf_theta_v_values, wdrc_drk
     # Plot smooth surface - DCE
     surface_drcmmse = ax.plot_surface(lambda_grid_drcmmse, theta_v_grid_drcmmse, cost_grid_drcmmse, alpha=0.6, color='yellow', label='WDRC+DRMMSE', antialiased=False)
     surfaces.append(surface_drcmmse)
-    labels.append('WDRC + DRMMSE [55]')
+    labels.append('WDRC + DRMMSE [8]')
+    #--------------
+    # Interpolate cost values for smooth surface - WDRC DRKF
+    lambda_grid_wdrc_drkf, theta_v_grid_wdrc_drkf = np.meshgrid(
+        np.linspace(min(wdrc_drkf_lambda_values), max(wdrc_drkf_lambda_values), 100),
+        np.linspace(min(wdrc_drkf_theta_v_values), max(wdrc_drkf_theta_v_values), 100)
+    )
+    cost_grid_wdrc_drkf = griddata(
+        (wdrc_drkf_lambda_values, wdrc_drkf_theta_v_values), wdrc_drkf_cost_values,
+        (lambda_grid_wdrc_drkf, theta_v_grid_wdrc_drkf), method='cubic'
+    )
+    
+    # Plot smooth surface - DCE
+    surface_wdrc_drkf = ax.plot_surface(lambda_grid_wdrc_drkf, theta_v_grid_wdrc_drkf, cost_grid_wdrc_drkf, alpha=0.4, color='red', label='WDRC+DRKF')
+    surfaces.append(surface_wdrc_drkf)
+    labels.append('WDRC + DRKF [9]')
+    
     
     #---------------------------
     # Interpolate cost values for smooth surface - DRCE

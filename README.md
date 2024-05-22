@@ -102,17 +102,7 @@ After data generation, plot the results using
 python plot_params_long.py --dist quadratic --noise_dist quadratic
 ```
 ---
-### Figure 5 (a) (b)
-First, generate the data using
-```
-python main_OS_parallel.py
-```
-After data generation, plot Figure 5 (a), (b) using
-```
-python plot_osp.py
-```
----
-### Figure 6 (a)
+### Figure 5 (a)
 First, generate the Total Cost data using
 ```
 python main_3.py
@@ -122,7 +112,7 @@ After data generation, plot the results using
 python plot_J.py
 ```
 ---
-### Figure 6 (b)
+### Figure 5 (b)
 First, generate the Total Cost data using
 ```
 python main_3.py --dist quadratic --noise_dist quadratic
@@ -132,7 +122,7 @@ After data generation, plot the results using
 python plot_J.py --dist quadratic --noise_dist quadratic
 ```
 ---
-### Figure 7 (a)
+### Figure 6 (a)
 First, generate the Total Cost data using
 ```
 python main_param_s21.py
@@ -142,7 +132,7 @@ After data generation, plot the results using
 python plot_params_21.py
 ```
 ---
-### Figure 7 (b)
+### Figure 6 (b)
 First, generate the Total Cost data using
 ```
 python main_param_s21.py --dist quadratic --noise_dist quadratic
@@ -151,4 +141,13 @@ After data generation, plot the results using
 ```
 python plot_params_21.py --dist quadratic --noise_dist quadratic
 ```
-
+---
+### Figure 7 (a) (b)
+First, generate the data using
+```
+python main_OS_parallel.py
+```
+After data generation, plot Figure 5 (a), (b) using
+```
+python plot_osp.py
+```
