@@ -147,7 +147,7 @@ First, generate the data using
 ```
 python main_OS_parallel.py
 ```
-After data generation, plot Figure 5 (a), (b) using
+After data generation, plot using
 ```
 python plot_osp.py
 ```

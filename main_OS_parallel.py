@@ -319,7 +319,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
                     print("num_noise_sample : ", num_noise, " / finished with dist : ", dist, "/ noise_dist : ", noise_dist, "/ seed : ", seed)
                 
     print("Data generation Completed!!")
-    
+    print("To get a plot, Use : python plot_osp.py")
     
 
     

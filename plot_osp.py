@@ -40,7 +40,7 @@ def summarize_theta_w(J_DRCE_mean_all_samp, J_DRCE_std_all_samp, DRCE_prob_all_s
     plt.xlim([theta_list[0], theta_list[-1]])
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
-    plt.savefig(path +'/OSP_Prob.pdf', dpi=300, bbox_inches="tight")
+    plt.savefig(path +'/OSP_Prob_{}_{}.pdf', dpi=300, bbox_inches="tight")
     plt.clf()
 
 
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     parser.add_argument('--noise_dist', required=False, default="normal", type=str) #noise distribution (normal or uniform or quadratic)
     args = parser.parse_args()
     
-    theta_list = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0] # radius of noise ambiguity set
+    theta_list = [0.05, 0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0] # radius of noise ambiguity set
     
     num_noise_list = [10, 15, 20] #
     
