@@ -107,6 +107,7 @@ First, generate the data using
 ```
 python main_OS_parallel.py
 ```
+Be aware that this Out-of-Sample Experiment is a time consuming process.
 After data generation, plot Figure (a), (b) using
 ```
 python plot_osp.py
