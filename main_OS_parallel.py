@@ -152,7 +152,7 @@ def main(dist, noise_dist1, num_sim, num_samples, num_noise_samples, T):
     theta_w_list = [0.05, 0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]
     
     num_noise_list = [10, 15, 20] 
-    
+    #theta=theta_w=theta_v=theta_x0 for Out-of-Sample Experiments
     for noise_dist in noisedist:
         for theta_w in theta_w_list:
                 WDRC_lambda, DRCE_lambda = [],[]
