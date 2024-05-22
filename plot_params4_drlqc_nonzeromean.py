@@ -98,7 +98,8 @@ def summarize_theta_w(lqg_theta_w_values, lqg_theta_v_values, lqg_cost_values ,w
     labels.append('WDR-CE [Ours]')
     
     #---------------
-    ax.legend(handles=surfaces, labels=labels)
+    ax.legend(handles=surfaces, labels=labels, bbox_to_anchor=(1.00, 0.7), loc='center right')
+    
     
     # Set labels
     ax.set_xlabel(r'$\theta_w$', fontsize=16)
